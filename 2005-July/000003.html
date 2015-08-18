@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [cpaf-dev] Proposed API for the family of Text  Widgets
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/cpaf-dev/2005-July/index.html" >
+   <LINK REL="made" HREF="mailto:cpaf-dev%40lists.berlios.de?Subject=Re%3A%20%5Bcpaf-dev%5D%20Proposed%20API%20for%20the%20family%20of%20Text%20%20Widgets&In-Reply-To=%3C1121443251.12916.11.camel%40localhost%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000002.html">
+   <LINK REL="Next"  HREF="000004.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[cpaf-dev] Proposed API for the family of Text  Widgets</H1>
+    <B>Mart Raudsepp</B> 
+    <A HREF="mailto:cpaf-dev%40lists.berlios.de?Subject=Re%3A%20%5Bcpaf-dev%5D%20Proposed%20API%20for%20the%20family%20of%20Text%20%20Widgets&In-Reply-To=%3C1121443251.12916.11.camel%40localhost%3E"
+       TITLE="[cpaf-dev] Proposed API for the family of Text  Widgets">leio at dustbite.net
+       </A><BR>
+    <I>Fri Jul 15 18:00:51 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000002.html">[cpaf-dev] Proposed API for the family of Text  Widgets
+</A></li>
+        <LI>Next message: <A HREF="000004.html">[cpaf-dev] Re: Proposed API for the family of Text  Widgets
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#3">[ date ]</a>
+              <a href="thread.html#3">[ thread ]</a>
+              <a href="subject.html#3">[ subject ]</a>
+              <a href="author.html#3">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>On Fri, 2005-07-08 at 22:15 -0300, <A HREF="https://lists.berlios.de/mailman/listinfo/cpaf-dev">snakeb at optonline.net</A> wrote:
+&gt;<i> void    set_font(font)
+</I>&gt;<i> Effect: Sets the font for the text widget to use. This effects all text
+</I>&gt;<i> contained within the widget
+</I>&gt;<i> Note:   This function might be better in gui::Widget instead of here
+</I>
+Suggestion for Effect:
+Sets the default font for the text widget to use. This effects all text
+contained within the widget, except _parts_ of the text that have a
+different font explicitly set (a la GtkTextTag's in gtk+).
+Good for Richtext and TextBox later on (TextBox should give some basic
+styling possibilities)
+
+&gt;<i> font    get_font()
+</I>&gt;<i> Effect: Returns the font currently used by the widget
+</I>&gt;<i> Note:   This function might be better in gui::Widget instead of here
+</I>
+Default font, as above described for get_font?
+
+&gt;<i> void    insert_text(str, position)
+</I>&gt;<i> Effect:	Inserts str at the given position within the widget
+</I>
+&gt;<i> void    delete_text(int start, int end)
+</I>&gt;<i> Effect:	Removes the text between positions start and end
+</I>
+For a really powerful widget, iterators would be fun - but I guess
+cross-platform puts its limits here. And this can be a function of
+Richtext then.
+
+&gt;<i> int     get_selection_start()
+</I>&gt;<i> Effect:	Returns the index of the beginning of the selection
+</I>&gt;<i> 
+</I>&gt;<i> int     get_selection_end()
+</I>&gt;<i> Effect:	Returns the index of the end of the selection. If one character is
+</I>&gt;<i> selected and the index of the start of the selection is 1, this function
+</I>&gt;<i> returns 2. If no characters are selection and the start index is 1, this
+</I>&gt;<i> function returns 1.
+</I>
+start and end aren't perfect terms here - &quot;start&quot; could come AFTER
+&quot;end&quot;, the position where the cursor blinks is at &quot;end&quot; - this means a
+visual cursor appearance difference (if present), and where the cursor
+moves with arrow keys (either from the right or left end of the
+selection).
+
+&gt;<i> string  get_selection_text()
+</I>&gt;<i> Effect: Returns a string containing the text that is selected
+</I>
+I would see that as a convenience function - get_text_from_range alike
+thing with get_selection returnt values would be more low-level than
+that, hence the claim that this is a convenience func.
+
+&gt;<i> void    set_selection_text(str)
+</I>&gt;<i> Effect:	Replaces the selected text with str. The length of str may be
+</I>&gt;<i> different than the length of the selection.
+</I>&gt;<i> Postcondition: str is now selected within the widget.
+</I>
+Don't really like the Postcondition - it's rarely what one wants imho.
+This could be solved through some kind of emulation aswell, as below
+with delete_selection:
+
+&gt;<i> void    delete_selection()
+</I>&gt;<i> Effect: Deletes the selected text. This is equivilant to setting the selected
+</I>&gt;<i> text to be an empty string.
+</I>&gt;<i> Postcondition: The selection length is now 0.
+</I>
+Having an effect of &quot;backspace emulation&quot; would be another possibility
+for this functionality - together with a different method name.
+
+&gt;<i> Class:
+</I>&gt;<i> EntryBox
+</I>&gt;<i> 
+</I>&gt;<i> Inherits From:
+</I>&gt;<i> TextWidget
+</I>&gt;<i> 
+</I>&gt;<i> Purpose:
+</I>&gt;<i> This class represents a simple text entry field. It can only contain one line
+</I>&gt;<i> of text (is not multilined). It does not implement any new methods.
+</I>
+Later it should have convenience functions for entry boxes - e.g to
+switch to a password box.
+
+&gt;<i> Class:
+</I>&gt;<i> TextBox
+</I>&gt;<i> 
+</I>&gt;<i> Inherits From:
+</I>&gt;<i> TextWidget
+</I>&gt;<i> 
+</I>&gt;<i> Purpose:
+</I>&gt;<i> This class represents a mutliline EditBox. It does not provide anything more
+</I>&gt;<i> than this.
+</I>
+I would like to see some more functionality here later on - basic
+styling, and such.
+
+&gt;<i> Methods:
+</I>&gt;<i> 
+</I>&gt;<i> int     get_line_count()
+</I>&gt;<i> Effect: Returns the number of lines in the TextBox
+</I>&gt;<i> 
+</I>&gt;<i> string  get_line(index)
+</I>&gt;<i> Effect: Returns a string containing the text of line index
+</I>&gt;<i> 
+</I>&gt;<i> int     get_character_line_index(index)
+</I>&gt;<i> Effect: Returns the index of the line containing the character at the given
+</I>&gt;<i> index
+</I>&gt;<i> 
+</I>&gt;<i> int     get_char_index_at_position(point)
+</I>&gt;<i> Effect: Returns the index of the character at the given position in client
+</I>&gt;<i> coordinates.
+</I>&gt;<i> 
+</I>&gt;<i> Class:
+</I>&gt;<i> RichTextBox
+</I>&gt;<i> 
+</I>&gt;<i> Inherits From:
+</I>&gt;<i> TextWidget
+</I>&gt;<i> 
+</I>&gt;<i> Purpose:
+</I>&gt;<i> This is a fully featured text widget.
+</I>&gt;<i> 
+</I>&gt;<i> I don't know all that much about RichText widgets in general yet so I will not
+</I>&gt;<i> propose a specific api for this control at this time.
+</I>
+I will put thought on this at some point to kill two flies in one go -
+wx needs such widget aswell.
+
+Comparing with other APIs later on, and perhaps making more suggestions.
+
+-- 
+With regards,
+Mart Raudsepp
+
+Gtk+ port maintainer of cpaf
+<A HREF="https://lists.berlios.de/mailman/listinfo/cpaf-dev">leio at users.berlios.de</A>
+<A HREF="http://developer.berlios.de/projects/cpaf">http://developer.berlios.de/projects/cpaf</A>
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000002.html">[cpaf-dev] Proposed API for the family of Text  Widgets
+</A></li>
+	<LI>Next message: <A HREF="000004.html">[cpaf-dev] Re: Proposed API for the family of Text  Widgets
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#3">[ date ]</a>
+              <a href="thread.html#3">[ thread ]</a>
+              <a href="subject.html#3">[ subject ]</a>
+              <a href="author.html#3">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/cpaf-dev">More information about the cpaf-dev
+mailing list</a><br>
+</body></html>

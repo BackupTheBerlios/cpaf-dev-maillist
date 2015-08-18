@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [cpaf-dev] Proposed API for the family of Text  Widgets
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/cpaf-dev/2005-July/index.html" >
+   <LINK REL="made" HREF="mailto:cpaf-dev%40lists.berlios.de?Subject=Re%3A%20%5Bcpaf-dev%5D%20Proposed%20API%20for%20the%20family%20of%20Text%20%20Widgets&In-Reply-To=%3C21017b211a27.211a2721017b%40optonline.net%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000003.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[cpaf-dev] Proposed API for the family of Text  Widgets</H1>
+    <B>snakeb at optonline.net</B> 
+    <A HREF="mailto:cpaf-dev%40lists.berlios.de?Subject=Re%3A%20%5Bcpaf-dev%5D%20Proposed%20API%20for%20the%20family%20of%20Text%20%20Widgets&In-Reply-To=%3C21017b211a27.211a2721017b%40optonline.net%3E"
+       TITLE="[cpaf-dev] Proposed API for the family of Text  Widgets">snakeb at optonline.net
+       </A><BR>
+    <I>Sat Jul  9 03:15:19 CEST 2005</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000003.html">[cpaf-dev] Proposed API for the family of Text  Widgets
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#2">[ date ]</a>
+              <a href="thread.html#2">[ thread ]</a>
+              <a href="subject.html#2">[ subject ]</a>
+              <a href="author.html#2">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Note that all indexes are 0 based and that &quot;selection length&quot; means how many
+characters are selected.
+
+Class:
+TextWidget
+
+Purpose:
+Serves as the common base class for the family of text widgets in cpaf.
+Features common to all text widgets (selection ranges, inserting and
+deleting text, etc) will go into this base.
+
+Methods:
+
+void    set_font(font)
+Effect: Sets the font for the text widget to use. This effects all text
+contained within the widget
+Note:   This function might be better in gui::Widget instead of here
+
+font    get_font()
+Effect: Returns the font currently used by the widget
+Note:   This function might be better in gui::Widget instead of here
+
+void    set_text(str)
+Effect: Replaces the text in the text widget with str
+
+string  get_text()
+Effect: Returns a string containing the text in the widget
+
+void    insert_text(str, position)
+Effect:	Inserts str at the given position within the widget
+
+void    delete_text(int start, int end)
+Effect:	Removes the text between positions start and end
+
+void    set_selection(start, end)
+Effect:	Selects the range of text [start, end). start is included, end is not.
+If start == end, the caret will be moved to that position and the length of the
+selection is zero.
+
+int     get_selection_start()
+Effect:	Returns the index of the beginning of the selection
+
+int     get_selection_end()
+Effect:	Returns the index of the end of the selection. If one character is
+selected and the index of the start of the selection is 1, this function
+returns 2. If no characters are selection and the start index is 1, this
+function returns 1.
+
+string  get_selection_text()
+Effect: Returns a string containing the text that is selected
+
+void    set_selection_text(str)
+Effect:	Replaces the selected text with str. The length of str may be
+different than the length of the selection.
+Postcondition: str is now selected within the widget.
+
+void    delete_selection()
+Effect: Deletes the selected text. This is equivilant to setting the selected
+text to be an empty string.
+Postcondition: The selection length is now 0.
+
+Class:
+EntryBox
+
+Inherits From:
+TextWidget
+
+Purpose:
+This class represents a simple text entry field. It can only contain one line
+of text (is not multilined). It does not implement any new methods.
+
+Class:
+TextBox
+
+Inherits From:
+TextWidget
+
+Purpose:
+This class represents a mutliline EditBox. It does not provide anything more
+than this.
+
+Methods:
+
+int     get_line_count()
+Effect: Returns the number of lines in the TextBox
+
+string  get_line(index)
+Effect: Returns a string containing the text of line index
+
+int     get_character_line_index(index)
+Effect: Returns the index of the line containing the character at the given
+index
+
+int     get_char_index_at_position(point)
+Effect: Returns the index of the character at the given position in client
+coordinates.
+
+Class:
+RichTextBox
+
+Inherits From:
+TextWidget
+
+Purpose:
+This is a fully featured text widget.
+
+I don't know all that much about RichText widgets in general yet so I will not
+propose a specific api for this control at this time.
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000003.html">[cpaf-dev] Proposed API for the family of Text  Widgets
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#2">[ date ]</a>
+              <a href="thread.html#2">[ thread ]</a>
+              <a href="subject.html#2">[ subject ]</a>
+              <a href="author.html#2">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/cpaf-dev">More information about the cpaf-dev
+mailing list</a><br>
+</body></html>

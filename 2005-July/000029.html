@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [cpaf-dev] Re: Proposed API for the family of Text Widgets
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/cpaf-dev/2005-July/index.html" >
+   <LINK REL="made" HREF="mailto:cpaf-dev%40lists.berlios.de?Subject=Re%3A%20%5Bcpaf-dev%5D%20Re%3A%20Proposed%20API%20for%20the%20family%20of%20Text%20Widgets&In-Reply-To=%3Cloom.20050722T214506-541%40post.gmane.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000027.html">
+   <LINK REL="Next"  HREF="000006.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[cpaf-dev] Re: Proposed API for the family of Text Widgets</H1>
+    <B>Robin McNeill</B> 
+    <A HREF="mailto:cpaf-dev%40lists.berlios.de?Subject=Re%3A%20%5Bcpaf-dev%5D%20Re%3A%20Proposed%20API%20for%20the%20family%20of%20Text%20Widgets&In-Reply-To=%3Cloom.20050722T214506-541%40post.gmane.org%3E"
+       TITLE="[cpaf-dev] Re: Proposed API for the family of Text Widgets">snakeb at optonline.net
+       </A><BR>
+    <I>Fri Jul 22 21:57:25 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000027.html">[cpaf-dev] Re: Proposed API for the family of Text Widgets
+</A></li>
+        <LI>Next message: <A HREF="000006.html">[cpaf-dev] Please update your account info
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#29">[ date ]</a>
+              <a href="thread.html#29">[ thread ]</a>
+              <a href="subject.html#29">[ subject ]</a>
+              <a href="author.html#29">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>&gt;<i> &gt; In Cocoa there is:
+</I>&gt;<i> &gt; 
+</I>&gt;<i> &gt; typedef enum _NSTextAlignment {
+</I>&gt;<i> &gt;    NSLeftTextAlignment = 0,
+</I>&gt;<i> &gt;    NSRightTextAlignment = 1,
+</I>&gt;<i> &gt;    NSCenterTextAlignment = 2,
+</I>&gt;<i> &gt;    NSJustifiedTextAlignment = 3,
+</I>&gt;<i> &gt;    NSNaturalTextAlignment = 4
+</I>&gt;<i> &gt; } NSTextAlignment;
+</I>&gt;<i> &gt; 
+</I>&gt;<i> &gt; So things like 0.25 or 0.75 won't be easy to implement on all
+</I>&gt;<i> &gt; platforms. That could be also moved into the control-class...
+</I>&gt;<i> 
+</I>&gt;<i> Justify is a bit different here then.
+</I>&gt;<i> Otherwise I'm not sure that limiting the API to the least possible alignment
+</I>across platforms
+&gt;<i> would be a good idea.
+</I>&gt;<i> Perhaps could on cocoa/win32 port use LeftAlign if the floating argument is
+</I>less than 0.4 or so,
+&gt;<i> RightAlign if greater than 0.6, and CenterAlign if between those two certain
+</I>values. This can be
+&gt;<i> documented then with platform specific notes.
+</I>&gt;<i> For justify we could use a negative value or something.
+</I>&gt;<i> Ideas welcome.
+</I>
+I never thought for a second that there was any other way to approach alignment
+except for predefined values as tom listed above. What is the difference between
+0.1 and 0.2 alignment? The text is a &quot;bit more to the right than 0.1&quot;? What use
+is that to real programs?
+
+class TextWidget { // or editable, which ever
+  enum Alignment {
+    LEFT,
+    CENTER,
+    RIGHT,
+    JUSTIFY,
+  };
+
+  void set_alignment(Alignment a);
+  void set_vertical_alignment(Alignment a);
+
+};
+
+Not sure if setting the vertical alignment is possible (for win32 anyway),
+haven't looked into it yet. I also don't know what &quot;Natural&quot; alignment is.
+
+As for the talk of moving many functions into common bases, we could take a
+different approach and use mix-in classes. Something like:
+
+class Editable : public Alignable { };
+class Button : public Alignable { };
+
+class Alignable {
+  enum Alignment { ... };
+  void set_alignment();
+  void ...
+};
+
+Creating too many base classes might be a bad idea if taken too far. There would
+have to be a large degree of similarity between two controls for them to share a
+base class.
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000027.html">[cpaf-dev] Re: Proposed API for the family of Text Widgets
+</A></li>
+	<LI>Next message: <A HREF="000006.html">[cpaf-dev] Please update your account info
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#29">[ date ]</a>
+              <a href="thread.html#29">[ thread ]</a>
+              <a href="subject.html#29">[ subject ]</a>
+              <a href="author.html#29">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/cpaf-dev">More information about the cpaf-dev
+mailing list</a><br>
+</body></html>

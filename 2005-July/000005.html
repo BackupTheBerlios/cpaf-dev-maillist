@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [cpaf-dev] Re: Proposed API for the family of Text  Widgets
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/cpaf-dev/2005-July/index.html" >
+   <LINK REL="made" HREF="mailto:cpaf-dev%40lists.berlios.de?Subject=Re%3A%20%5Bcpaf-dev%5D%20Re%3A%20Proposed%20API%20for%20the%20family%20of%20Text%20%20Widgets&In-Reply-To=%3Cloom.20050716T105727-261%40post.gmane.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000004.html">
+   <LINK REL="Next"  HREF="000025.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[cpaf-dev] Re: Proposed API for the family of Text  Widgets</H1>
+    <B>Robin McNeill</B> 
+    <A HREF="mailto:cpaf-dev%40lists.berlios.de?Subject=Re%3A%20%5Bcpaf-dev%5D%20Re%3A%20Proposed%20API%20for%20the%20family%20of%20Text%20%20Widgets&In-Reply-To=%3Cloom.20050716T105727-261%40post.gmane.org%3E"
+       TITLE="[cpaf-dev] Re: Proposed API for the family of Text  Widgets">snakeb at optonline.net
+       </A><BR>
+    <I>Sat Jul 16 11:03:07 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000004.html">[cpaf-dev] Re: Proposed API for the family of Text  Widgets
+</A></li>
+        <LI>Next message: <A HREF="000025.html">[cpaf-dev] Re: Proposed API for the family of Text Widgets
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#5">[ date ]</a>
+              <a href="thread.html#5">[ thread ]</a>
+              <a href="subject.html#5">[ subject ]</a>
+              <a href="author.html#5">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Robin McNeill &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/cpaf-dev">snakeb at ...</A>&gt; writes:
+
+&gt;<i> void set_password_character(character c)
+</I>&gt;<i> Effect: Sets the password character to use for this EntryBox, and also makes
+</I>&gt;<i> this EntryBox function as a password input box.
+</I>&gt;<i> 
+</I>&gt;<i> Should we include explicit &quot;password box&quot; enable and disable functions instead
+</I>&gt;<i> of making set_password_character make the EntryBox a password box forever?
+</I>
+I can't believe how bad of a function I just suggested. You do not set the
+password character in any api that I know of, you specify an entry box as being
+for passwords. So, forget about that function. Would we rather have a specific
+class deticated to password entry fields or a function to change entrybox into a
+password entry box? I prefer a new class, because I cannot think of a reasonable
+instance where I would change an entrybox to a password entry box and back again.
+
+Class:
+PasswordBox
+
+Inherits From:
+EntryBox
+
+Purpose:
+This class represends an EntryBox that the user will type a password or other
+sensitive information into. It outputs a '*' or similar character for each
+character the user types.
+
+Other things that need to be discussed include how to handle scrollbars for
+these text widgets, and word wrapping. Leio, I know you've had more experience
+with word wrapping than me, do you have any thoughts here?
+
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000004.html">[cpaf-dev] Re: Proposed API for the family of Text  Widgets
+</A></li>
+	<LI>Next message: <A HREF="000025.html">[cpaf-dev] Re: Proposed API for the family of Text Widgets
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#5">[ date ]</a>
+              <a href="thread.html#5">[ thread ]</a>
+              <a href="subject.html#5">[ subject ]</a>
+              <a href="author.html#5">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/cpaf-dev">More information about the cpaf-dev
+mailing list</a><br>
+</body></html>

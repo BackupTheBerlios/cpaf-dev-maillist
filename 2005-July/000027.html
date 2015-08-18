@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [cpaf-dev] Re: Proposed API for the family of Text Widgets
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/cpaf-dev/2005-July/index.html" >
+   <LINK REL="made" HREF="mailto:cpaf-dev%40lists.berlios.de?Subject=Re%3A%20%5Bcpaf-dev%5D%20Re%3A%20Proposed%20API%20for%20the%20family%20of%20Text%20Widgets&In-Reply-To=%3C1122029242.12909.11.camel%40localhost%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000026.html">
+   <LINK REL="Next"  HREF="000029.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[cpaf-dev] Re: Proposed API for the family of Text Widgets</H1>
+    <B>Mart Raudsepp</B> 
+    <A HREF="mailto:cpaf-dev%40lists.berlios.de?Subject=Re%3A%20%5Bcpaf-dev%5D%20Re%3A%20Proposed%20API%20for%20the%20family%20of%20Text%20Widgets&In-Reply-To=%3C1122029242.12909.11.camel%40localhost%3E"
+       TITLE="[cpaf-dev] Re: Proposed API for the family of Text Widgets">leio at dustbite.net
+       </A><BR>
+    <I>Fri Jul 22 12:47:22 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000026.html">[cpaf-dev] Re: Proposed API for the family of Text Widgets
+</A></li>
+        <LI>Next message: <A HREF="000029.html">[cpaf-dev] Re: Proposed API for the family of Text Widgets
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#27">[ date ]</a>
+              <a href="thread.html#27">[ thread ]</a>
+              <a href="subject.html#27">[ subject ]</a>
+              <a href="author.html#27">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>On Fri, 2005-07-22 at 09:50 +0200, tom wrote: 
+&gt;<i> &gt; Class:
+</I>&gt;<i> &gt; Editable
+</I>&gt;<i> &gt; [...]
+</I>&gt;<i> &gt; Methods:
+</I>&gt;<i> &gt; void    set_text(str)
+</I>&gt;<i> &gt; void    set_font(font)
+</I>&gt;<i> &gt; font    get_font()
+</I>&gt;<i> &gt; [...]
+</I>&gt;<i> &gt; void    insert_text(string text, int&amp; pos)
+</I>&gt;<i> &gt; void    delete_text(int start_pos = 0, int end_pos = -1)
+</I>&gt;<i> &gt; string  get_text(int start_pos = 0, int end_pos = -1)
+</I>&gt;<i> 
+</I>&gt;<i> A button could also have these functions, so why not create a Control
+</I>&gt;<i> class? Cocoa does that:
+</I>&gt;<i> <A HREF="http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/Classes/NSControl.html">http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/Classes/NSControl.html</A>
+</I>&gt;<i> There are even things for editing text in it...
+</I>
+I think it depends on how ever Button class ends up really.
+For example in gtk+ a button is simply a binary container. One could put
+anything inside it, including a boxed or table container into it,
+allowing virtually any amount and kind of widget inside the button.
+Convenience functions exist for buttons with label with an optional
+image on the left.
+I COULD implement the functions in gtk2::gui::Button for working with
+the buttons label, but I'm not too happy with insert_text/delete_text
+there.
+set_font/get_font are GtkWidget properties too in a way, so those
+shouldn't be a problem.
+
+&gt;<i> &gt; Class:
+</I>&gt;<i> &gt; EntryBox [Entry]
+</I>&gt;<i> &gt; [...] 
+</I>&gt;<i> &gt; Methods:
+</I>&gt;<i> &gt; 
+</I>&gt;<i> &gt; void    set_visibility(bool visible)
+</I>&gt;<i> &gt; Effect: Sets whether the contents of the entrybox are visible or not. When visibility
+</I>&gt;<i> &gt;         is set to false, characters are displayed as the invisible char, and will also
+</I>&gt;<i> &gt;         appear that way when the text in the entrybox is copied elsewhere.
+</I>&gt;<i> &gt; Note:   The default invisible character is the asterisk '*', but it can be changed
+</I>&gt;<i> &gt;         with set_invisible_char().
+</I>&gt;<i> &gt; 
+</I>&gt;<i> &gt; bool    get_visibility()
+</I>&gt;<i> &gt; Effect: Returns if characters are shown as plain text.
+</I>&gt;<i> 
+</I>&gt;<i> No! That isn't a good idea. A password field isn't just an entry with
+</I>&gt;<i> an &quot;invisible character&quot;. Cocoa warns you when you have the capslock
+</I>&gt;<i> key pressed, there have to be things done so you can't copy the text.
+</I>
+gtk+ also does special things if in &quot;password mode&quot; (set_visibility(false)).
+E.g the text copied from the entry while in &quot;password mode&quot; gets to be copied as ***'s.
+Can you perhaps emulate the runtime changing somehow, if not possible otherwise?
+Perhaps by recreating the control and copying the properties over between TextField and SecureTextField?
+
+&gt;<i> The default invisible character is platform dependent. Some platforms
+</I>&gt;<i> use *, others use a point
+</I>&gt;<i> (<A HREF="http://www.helpdesk.umd.edu/documents/3/3834/images/password.gif">http://www.helpdesk.umd.edu/documents/3/3834/images/password.gif</A>).
+</I>
+It should be theme dependant, forget set/get_invisible_char, it is doomed to be deprecated in gtk+ too.
+
+&gt;<i> &gt; void    set_alignment(float xalign)
+</I>&gt;<i> &gt; Effect: Sets the alignment for the contents of the entrybox. This controls the horizontal
+</I>&gt;<i> &gt;         positioning of the contents when the displayed text is shorter than the width of
+</I>&gt;<i> &gt;         the entry.
+</I>&gt;<i> &gt; Note:   xaling is from 0 (left) to 1 (right). Reversed for RTL layouts.
+</I>&gt;<i> &gt; 
+</I>&gt;<i> &gt; float   get_alignment()
+</I>&gt;<i> &gt; Effect: Returns the value set by set_alignment().
+</I>&gt;<i> &gt; Note:   Default is 0.0 (left aligned)
+</I>&gt;<i> 
+</I>&gt;<i> In Cocoa there is:
+</I>&gt;<i> 
+</I>&gt;<i> typedef enum _NSTextAlignment {
+</I>&gt;<i>    NSLeftTextAlignment = 0,
+</I>&gt;<i>    NSRightTextAlignment = 1,
+</I>&gt;<i>    NSCenterTextAlignment = 2,
+</I>&gt;<i>    NSJustifiedTextAlignment = 3,
+</I>&gt;<i>    NSNaturalTextAlignment = 4
+</I>&gt;<i> } NSTextAlignment;
+</I>&gt;<i> (described on <A HREF="http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/Classes/NSText.html">http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/Classes/NSText.html</A>)
+</I>&gt;<i> 
+</I>&gt;<i> So things like 0.25 or 0.75 won't be easy to implement on all
+</I>&gt;<i> platforms. That could be also moved into the control-class...
+</I>
+Justify is a bit different here then.
+Otherwise I'm not sure that limiting the API to the least possible alignment across platforms
+would be a good idea.
+Perhaps could on cocoa/win32 port use LeftAlign if the floating argument is less than 0.4 or so,
+RightAlign if greater than 0.6, and CenterAlign if between those two certain values. This can be
+documented then with platform specific notes.
+For justify we could use a negative value or something.
+Ideas welcome.
+
+I'm not sure about this being good for a control-class. We can just go and work with a Editable/TextWidget for now.
+They are all just a pure interface (non-constructable) in the cpaf::gui namespace anyway.
+
+I propose to just have Editable derive from Widget, and later we can move some of the methods to an even more
+common class. Some platforms won't have to change any backend code, some could bring in that common class in
+implementation side too to share some common code. Just some cut and pasting then, and no time waste on
+disputing on things we don't know how we end up with. As I said, this is just a proposal on how to approach ;)
+
+-- 
+With regards,
+Mart Raudsepp
+
+Project manager of wxMUD
+E-mail: <A HREF="https://lists.berlios.de/mailman/listinfo/cpaf-dev">leio at dustbite.net</A>
+<A HREF="http://wxmud.sourceforge.net/">http://wxmud.sourceforge.net/</A>
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000026.html">[cpaf-dev] Re: Proposed API for the family of Text Widgets
+</A></li>
+	<LI>Next message: <A HREF="000029.html">[cpaf-dev] Re: Proposed API for the family of Text Widgets
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#27">[ date ]</a>
+              <a href="thread.html#27">[ thread ]</a>
+              <a href="subject.html#27">[ subject ]</a>
+              <a href="author.html#27">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/cpaf-dev">More information about the cpaf-dev
+mailing list</a><br>
+</body></html>

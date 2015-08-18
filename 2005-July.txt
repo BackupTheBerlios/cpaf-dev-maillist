@@ -1,0 +1,1259 @@
+From snakeb at optonline.net  Sat Jul  9 03:15:19 2005
+From: snakeb at optonline.net (snakeb at optonline.net)
+Date: Fri, 08 Jul 2005 22:15:19 -0300
+Subject: [cpaf-dev] Proposed API for the family of Text  Widgets
+Message-ID: <21017b211a27.211a2721017b@optonline.net>
+
+Note that all indexes are 0 based and that "selection length" means how many
+characters are selected.
+
+Class:
+TextWidget
+
+Purpose:
+Serves as the common base class for the family of text widgets in cpaf.
+Features common to all text widgets (selection ranges, inserting and
+deleting text, etc) will go into this base.
+
+Methods:
+
+void    set_font(font)
+Effect: Sets the font for the text widget to use. This effects all text
+contained within the widget
+Note:   This function might be better in gui::Widget instead of here
+
+font    get_font()
+Effect: Returns the font currently used by the widget
+Note:   This function might be better in gui::Widget instead of here
+
+void    set_text(str)
+Effect: Replaces the text in the text widget with str
+
+string  get_text()
+Effect: Returns a string containing the text in the widget
+
+void    insert_text(str, position)
+Effect:	Inserts str at the given position within the widget
+
+void    delete_text(int start, int end)
+Effect:	Removes the text between positions start and end
+
+void    set_selection(start, end)
+Effect:	Selects the range of text [start, end). start is included, end is not.
+If start == end, the caret will be moved to that position and the length of the
+selection is zero.
+
+int     get_selection_start()
+Effect:	Returns the index of the beginning of the selection
+
+int     get_selection_end()
+Effect:	Returns the index of the end of the selection. If one character is
+selected and the index of the start of the selection is 1, this function
+returns 2. If no characters are selection and the start index is 1, this
+function returns 1.
+
+string  get_selection_text()
+Effect: Returns a string containing the text that is selected
+
+void    set_selection_text(str)
+Effect:	Replaces the selected text with str. The length of str may be
+different than the length of the selection.
+Postcondition: str is now selected within the widget.
+
+void    delete_selection()
+Effect: Deletes the selected text. This is equivilant to setting the selected
+text to be an empty string.
+Postcondition: The selection length is now 0.
+
+Class:
+EntryBox
+
+Inherits From:
+TextWidget
+
+Purpose:
+This class represents a simple text entry field. It can only contain one line
+of text (is not multilined). It does not implement any new methods.
+
+Class:
+TextBox
+
+Inherits From:
+TextWidget
+
+Purpose:
+This class represents a mutliline EditBox. It does not provide anything more
+than this.
+
+Methods:
+
+int     get_line_count()
+Effect: Returns the number of lines in the TextBox
+
+string  get_line(index)
+Effect: Returns a string containing the text of line index
+
+int     get_character_line_index(index)
+Effect: Returns the index of the line containing the character at the given
+index
+
+int     get_char_index_at_position(point)
+Effect: Returns the index of the character at the given position in client
+coordinates.
+
+Class:
+RichTextBox
+
+Inherits From:
+TextWidget
+
+Purpose:
+This is a fully featured text widget.
+
+I don't know all that much about RichText widgets in general yet so I will not
+propose a specific api for this control at this time.
+
+
+
+From leio at dustbite.net  Fri Jul 15 18:00:51 2005
+From: leio at dustbite.net (Mart Raudsepp)
+Date: Fri, 15 Jul 2005 19:00:51 +0300
+Subject: [cpaf-dev] Proposed API for the family of Text  Widgets
+In-Reply-To: <21017b211a27.211a2721017b@optonline.net>
+References: <21017b211a27.211a2721017b@optonline.net>
+Message-ID: <1121443251.12916.11.camel@localhost>
+
+On Fri, 2005-07-08 at 22:15 -0300, snakeb at optonline.net wrote:
+> void    set_font(font)
+> Effect: Sets the font for the text widget to use. This effects all text
+> contained within the widget
+> Note:   This function might be better in gui::Widget instead of here
+
+Suggestion for Effect:
+Sets the default font for the text widget to use. This effects all text
+contained within the widget, except _parts_ of the text that have a
+different font explicitly set (a la GtkTextTag's in gtk+).
+Good for Richtext and TextBox later on (TextBox should give some basic
+styling possibilities)
+
+> font    get_font()
+> Effect: Returns the font currently used by the widget
+> Note:   This function might be better in gui::Widget instead of here
+
+Default font, as above described for get_font?
+
+> void    insert_text(str, position)
+> Effect:	Inserts str at the given position within the widget
+
+> void    delete_text(int start, int end)
+> Effect:	Removes the text between positions start and end
+
+For a really powerful widget, iterators would be fun - but I guess
+cross-platform puts its limits here. And this can be a function of
+Richtext then.
+
+> int     get_selection_start()
+> Effect:	Returns the index of the beginning of the selection
+> 
+> int     get_selection_end()
+> Effect:	Returns the index of the end of the selection. If one character is
+> selected and the index of the start of the selection is 1, this function
+> returns 2. If no characters are selection and the start index is 1, this
+> function returns 1.
+
+start and end aren't perfect terms here - "start" could come AFTER
+"end", the position where the cursor blinks is at "end" - this means a
+visual cursor appearance difference (if present), and where the cursor
+moves with arrow keys (either from the right or left end of the
+selection).
+
+> string  get_selection_text()
+> Effect: Returns a string containing the text that is selected
+
+I would see that as a convenience function - get_text_from_range alike
+thing with get_selection returnt values would be more low-level than
+that, hence the claim that this is a convenience func.
+
+> void    set_selection_text(str)
+> Effect:	Replaces the selected text with str. The length of str may be
+> different than the length of the selection.
+> Postcondition: str is now selected within the widget.
+
+Don't really like the Postcondition - it's rarely what one wants imho.
+This could be solved through some kind of emulation aswell, as below
+with delete_selection:
+
+> void    delete_selection()
+> Effect: Deletes the selected text. This is equivilant to setting the selected
+> text to be an empty string.
+> Postcondition: The selection length is now 0.
+
+Having an effect of "backspace emulation" would be another possibility
+for this functionality - together with a different method name.
+
+> Class:
+> EntryBox
+> 
+> Inherits From:
+> TextWidget
+> 
+> Purpose:
+> This class represents a simple text entry field. It can only contain one line
+> of text (is not multilined). It does not implement any new methods.
+
+Later it should have convenience functions for entry boxes - e.g to
+switch to a password box.
+
+> Class:
+> TextBox
+> 
+> Inherits From:
+> TextWidget
+> 
+> Purpose:
+> This class represents a mutliline EditBox. It does not provide anything more
+> than this.
+
+I would like to see some more functionality here later on - basic
+styling, and such.
+
+> Methods:
+> 
+> int     get_line_count()
+> Effect: Returns the number of lines in the TextBox
+> 
+> string  get_line(index)
+> Effect: Returns a string containing the text of line index
+> 
+> int     get_character_line_index(index)
+> Effect: Returns the index of the line containing the character at the given
+> index
+> 
+> int     get_char_index_at_position(point)
+> Effect: Returns the index of the character at the given position in client
+> coordinates.
+> 
+> Class:
+> RichTextBox
+> 
+> Inherits From:
+> TextWidget
+> 
+> Purpose:
+> This is a fully featured text widget.
+> 
+> I don't know all that much about RichText widgets in general yet so I will not
+> propose a specific api for this control at this time.
+
+I will put thought on this at some point to kill two flies in one go -
+wx needs such widget aswell.
+
+Comparing with other APIs later on, and perhaps making more suggestions.
+
+-- 
+With regards,
+Mart Raudsepp
+
+Gtk+ port maintainer of cpaf
+leio at users.berlios.de
+http://developer.berlios.de/projects/cpaf
+
+
+
+From snakeb at optonline.net  Sat Jul 16 09:17:41 2005
+From: snakeb at optonline.net (Robin McNeill)
+Date: Sat, 16 Jul 2005 07:17:41 +0000 (UTC)
+Subject: [cpaf-dev] Re: Proposed API for the family of Text  Widgets
+References: <21017b211a27.211a2721017b@optonline.net> <1121443251.12916.11.camel@localhost>
+Message-ID: <loom.20050716T082347-939@post.gmane.org>
+
+Mart Raudsepp <leio at ...> writes:
+
+> 
+> On Fri, 2005-07-08 at 22:15 -0300, snakeb at ... wrote:
+> > void    set_font(font)
+> > Effect: Sets the font for the text widget to use. This effects all text
+> > contained within the widget
+> > Note:   This function might be better in gui::Widget instead of here
+> 
+> Suggestion for Effect:
+> Sets the default font for the text widget to use. This effects all text
+> contained within the widget, except _parts_ of the text that have a
+> different font explicitly set (a la GtkTextTag's in gtk+).
+> Good for Richtext and TextBox later on (TextBox should give some basic
+> styling possibilities)
+> 
+> > font    get_font()
+> > Effect: Returns the font currently used by the widget
+> > Note:   This function might be better in gui::Widget instead of here
+> 
+> Default font, as above described for get_font?
+
+Sure, setting the "Default font" is fine. It hsould probably still be moved into
+gui::Widget.
+
+> > void    insert_text(str, position)
+> > Effect:	Inserts str at the given position within the widget
+> 
+> > void    delete_text(int start, int end)
+> > Effect:	Removes the text between positions start and end
+> 
+> For a really powerful widget, iterators would be fun - but I guess
+> cross-platform puts its limits here. And this can be a function of
+> Richtext then.
+
+Iterators would be great but I didn't include them into this iteration of the
+api. We'd need to think about how the iterators would actually work for
+extraction of elements efficiently. Insertion is easy; text would just be
+inserted at the "insertion point" using the insert_str function. Maybe it would
+use a different overload of it, one without the position parameter which inserts
+text at the current caret position. After an insertion the caret would move to
+the end of the inserted text so that inserting more than once works as expected.
+We also need to consider how streams will work with what ever string solution we
+end up using.
+
+> > int     get_selection_start()
+> > Effect:	Returns the index of the beginning of the selection
+> > 
+> > int     get_selection_end()
+> > Effect:	Returns the index of the end of the selection. If one character is
+> > selected and the index of the start of the selection is 1, this function
+> > returns 2. If no characters are selection and the start index is 1, this
+> > function returns 1.
+> 
+> start and end aren't perfect terms here - "start" could come AFTER
+> "end", the position where the cursor blinks is at "end" - this means a
+> visual cursor appearance difference (if present), and where the cursor
+> moves with arrow keys (either from the right or left end of the
+> selection).
+
+Your right. How about we add
+
+int	get_insertion_position();
+Effect:	Returns the character index of the caret within the control.
+
+int     get_selection_start()
+Effect:	Returns the index of the beginning of the selection, which is defined as
+the left most selected character.
+
+int     get_selection_end()
+Effect:	Returns the index of the end of the selection, which is defined as the
+right most selected character.
+
+I haven't put too much thought into those so they may not be useful functions.
+
+> > string  get_selection_text()
+> > Effect: Returns a string containing the text that is selected
+> 
+> I would see that as a convenience function - get_text_from_range alike
+> thing with get_selection returnt values would be more low-level than
+> that, hence the claim that this is a convenience func.
+
+That reminds me, I forgot about this:
+
+string  get_text_range(int begin, int end)
+Effect: Returns the text in the range [begin, end)
+
+> > void    set_selection_text(str)
+> > Effect:	Replaces the selected text with str. The length of str may be
+> > different than the length of the selection.
+> > Postcondition: str is now selected within the widget.
+> 
+> Don't really like the Postcondition - it's rarely what one wants imho.
+> This could be solved through some kind of emulation aswell, as below
+> with delete_selection:
+
+Your probably right, lets drop that post condition then. If the user code wants
+it, they can re-select the string they replaced the old selection with. If we
+keep the post condition and the programmer doesn't want the string selected it
+creates flickering as the text is selected and then immediately deselected.
+
+> > void    delete_selection()
+> > Effect: Deletes the selected text. This is equivilant to setting the selected
+> > text to be an empty string.
+> > Postcondition: The selection length is now 0.
+> 
+> Having an effect of "backspace emulation" would be another possibility
+> for this functionality - together with a different method name.
+
+Different method name like what? To go along with "get_text_range()" we should
+also have:
+
+void delete_text_range(int begin, int end)
+Effect: Removes the text range [begin, end) from the TextWidget.
+
+Can't believe I didn't include this but we also need:
+
+void replace_text_range(int begin, int end, string str)
+Effect: Replaces the range of text [begin, end) with str.
+
+What should happen to the caret after replace_text_range has been called?
+
+> > Class:
+> > EntryBox
+> > 
+> > Inherits From:
+> > TextWidget
+> > 
+> > Purpose:
+> > This class represents a simple text entry field. It can only contain one line
+> > of text (is not multilined). It does not implement any new methods.
+> 
+> Later it should have convenience functions for entry boxes - e.g to
+> switch to a password box.
+
+Woops, that should definately be included.
+
+void set_password_character(character c)
+Effect: Sets the password character to use for this EntryBox, and also makes
+this EntryBox function as a password input box.
+
+Should we include explicit "password box" enable and disable functions instead
+of making set_password_character make the EntryBox a password box forever?
+
+> > Class:
+> > TextBox
+> > 
+> > Inherits From:
+> > TextWidget
+> > 
+> > Purpose:
+> > This class represents a mutliline EditBox. It does not provide anything more
+> > than this.
+> 
+> I would like to see some more functionality here later on - basic
+> styling, and such.
+
+No styling. If we add styling support here, where do we draw the line between
+this control and RichTextBox? That would be a very difficult choice. If you want
+styling, you use RichTextBox. That keeps the api clean. Look at what happened to
+wxTextCtrl because some styling support is included, along with physical
+RichTextBox support (on certain platforms) which uses the same exact api.
+
+If anybody notices a particular function that they think would be impossible to
+implement cleanly on a given port mention it so we don't design something that
+won't work.
+
+
+
+From snakeb at optonline.net  Sat Jul 16 11:03:07 2005
+From: snakeb at optonline.net (Robin McNeill)
+Date: Sat, 16 Jul 2005 09:03:07 +0000 (UTC)
+Subject: [cpaf-dev] Re: Proposed API for the family of Text  Widgets
+References: <21017b211a27.211a2721017b@optonline.net> <1121443251.12916.11.camel@localhost> <loom.20050716T082347-939@post.gmane.org>
+Message-ID: <loom.20050716T105727-261@post.gmane.org>
+
+Robin McNeill <snakeb at ...> writes:
+
+> void set_password_character(character c)
+> Effect: Sets the password character to use for this EntryBox, and also makes
+> this EntryBox function as a password input box.
+> 
+> Should we include explicit "password box" enable and disable functions instead
+> of making set_password_character make the EntryBox a password box forever?
+
+I can't believe how bad of a function I just suggested. You do not set the
+password character in any api that I know of, you specify an entry box as being
+for passwords. So, forget about that function. Would we rather have a specific
+class deticated to password entry fields or a function to change entrybox into a
+password entry box? I prefer a new class, because I cannot think of a reasonable
+instance where I would change an entrybox to a password entry box and back again.
+
+Class:
+PasswordBox
+
+Inherits From:
+EntryBox
+
+Purpose:
+This class represends an EntryBox that the user will type a password or other
+sensitive information into. It outputs a '*' or similar character for each
+character the user types.
+
+Other things that need to be discussed include how to handle scrollbars for
+these text widgets, and word wrapping. Leio, I know you've had more experience
+with word wrapping than me, do you have any thoughts here?
+
+
+
+
+From service at paypal.com  Sun Jul 17 01:55:40 2005
+From: service at paypal.com (service at paypal.com)
+Date: Sat, 16 Jul 2005 16:55:40 -0700 (PDT)
+Subject: [cpaf-dev] Please update your account info
+Message-ID: <20050716235540.1F170A8B4A@clust04-www07.powweb.com>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050716/61f41ce6/attachment.html>
+
+From service at paypal.com  Sun Jul 17 02:08:49 2005
+From: service at paypal.com (service at paypal.com)
+Date: Sat, 16 Jul 2005 17:08:49 -0700 (PDT)
+Subject: [cpaf-dev] Please update your account info
+Message-ID: <20050717000849.7F0B0A28E6@clust04-www06.powweb.com>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050716/8c161288/attachment.html>
+
+From service at paypal.com  Sun Jul 17 02:20:25 2005
+From: service at paypal.com (service at paypal.com)
+Date: Sat, 16 Jul 2005 17:20:25 -0700 (PDT)
+Subject: [cpaf-dev] Please update your account info
+Message-ID: <200507170020.j6H0KPHj036774@clust04-www05.powweb.com>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050716/ad01f566/attachment.html>
+
+From service at ebay.com  Sun Jul 17 13:43:05 2005
+From: service at ebay.com (service at ebay.com)
+Date: Sun, 17 Jul 2005 12:43:05 +0100
+Subject: [cpaf-dev] Update your account
+Message-ID: <CYTTWARQTJLLVOOSATVS@hotmail.com>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050717/30ae2f4c/attachment.html>
+
+From security at southtrust.com  Sun Jul 17 18:37:26 2005
+From: security at southtrust.com (SouthTrust Bank)
+Date: Sun, 17 Jul 2005 19:37:26 +0300
+Subject: [cpaf-dev] Security Update !
+Message-ID: <20050717153724.C00F62976E@ns.coninsalt.ro>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050717/47a5d52c/attachment.html>
+
+From service at paypal.com  Mon Jul 18 17:01:14 2005
+From: service at paypal.com (PayPal Support)
+Date: Mon, 18 Jul 2005 17:01:14 +0200
+Subject: [cpaf-dev] Account Suspension Notice
+Message-ID: <200507181501.j6IF1EB04888@webserver-193172.goracer.de>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050718/d32906e8/attachment.html>
+
+From paypal at email.paypal.com  Mon Jul 18 17:57:41 2005
+From: paypal at email.paypal.com (PayPal)
+Date: Mon, 18 Jul 2005 11:57:41 -0400
+Subject: [cpaf-dev] Security Center Advisory
+Message-ID: <E1DuXzx-0000XM-FH@host.3dkserver.com>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050718/250a69ac/attachment.html>
+
+From paypal at email.paypal.com  Mon Jul 18 18:13:43 2005
+From: paypal at email.paypal.com (PayPal)
+Date: Tue, 19 Jul 2005 00:13:43 +0800
+Subject: [cpaf-dev] Security Center Advisory
+Message-ID: <E1DuYFT-0003Rz-IG@host.w3fusion.com>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050719/4e620010/attachment.html>
+
+From antifraud at ebay.com  Wed Jul 20 01:47:23 2005
+From: antifraud at ebay.com (eBay Security Service)
+Date: Wed, 20 Jul 2005 03:47:23 +0400
+Subject: [cpaf-dev] Security Alert - Confirm Your eBay Information
+Message-ID: <XGUNSZJGFLBEYCZWTXNRPFAG@charter.net>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050720/d6d504d4/attachment.html>
+
+From support at ebay.com  Wed Jul 20 02:37:26 2005
+From: support at ebay.com (eBay Security Service)
+Date: Tue, 19 Jul 2005 17:37:26 -0700
+Subject: [cpaf-dev] Security Alert - Confirm Your eBay Information
+Message-ID: <CLJSAOSZRRTAREXXGPFHYINN@hotmail.com>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050719/e3a07be0/attachment.html>
+
+From confirm at ncua.gov  Wed Jul 20 07:19:12 2005
+From: confirm at ncua.gov (National Credit Union Administration)
+Date: Tue, 19 Jul 2005 22:19:12 -0700
+Subject: [cpaf-dev] Security Alert - Confirm Your NCUA Information
+Message-ID: <AKIEDADSQOLMRABQJFQIYD@verizon.net>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050719/9b047439/attachment.html>
+
+From confirm at ncua.gov  Wed Jul 20 07:35:24 2005
+From: confirm at ncua.gov (National Credit Union Administration)
+Date: Wed, 20 Jul 2005 07:35:24 +0200
+Subject: [cpaf-dev] Security Alert - Confirm Your NCUA Information
+Message-ID: <KHURSDGMRDFCNTSTXGJALLDX@aol.com>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050720/66438592/attachment.html>
+
+From confirm at ncua.gov  Wed Jul 20 08:29:49 2005
+From: confirm at ncua.gov (National Credit Union Administration)
+Date: Wed, 20 Jul 2005 00:29:49 -0600
+Subject: [cpaf-dev] Security Alert - Confirm Your NCUA Information
+Message-ID: <YEQDPJKOCXWDZPDTADBVAOKJ@yahoo.com>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050720/523530cb/attachment.html>
+
+From service at paypal.com  Wed Jul 20 21:14:00 2005
+From: service at paypal.com (PayPal)
+Date: Wed, 20 Jul 2005 20:14:00 +0100
+Subject: [cpaf-dev] Limited Account Access Details Subiect
+Message-ID: <CTOKDFTWYCOPJXBAOYSP@earthlink.net>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050720/452c4775/attachment.html>
+
+From snakeb at optonline.net  Thu Jul 21 00:24:55 2005
+From: snakeb at optonline.net (Robin McNeill)
+Date: Wed, 20 Jul 2005 22:24:55 +0000 (UTC)
+Subject: [cpaf-dev] Deletion of widgets in cpaf
+Message-ID: <loom.20050721T001514-862@post.gmane.org>
+
+After working on widget deletion code for win32, I came up with a scheme for the
+sending of WIDGET_DESTROYED events and actually deleting objects that I feel all
+ports should adapt to. Please consider if this scheme is feesable on your port
+and wether or not you believe it to be a good idea.
+
+Example:
+A Window has a Button as its only child. The Window is closed using its X
+button. For simpicity assume that the act of closing the window is the same as
+calling Window::destroy(). The following events occur in this order:
+
+Window recieves WIDGET_DESTROYED
+Button recieves WIDGET_DESTROYED
+Button is deleted
+Window is deleted
+
+This meets the following gaurentees for WIDGET_DESTROYED:
+While processing WIDGET_DESTROYED, it can be assumed all children still exist,
+unless they have been explicitly destroyed prior to recieving WIDGET_DESTROYED.
+After processing WIDGET_DESTROYED, it must be assumed that all children have
+been destroyed and deleted.
+
+Along with meeting these gaurentees, I believe it is also logical for deletion
+to happen in this way. The widget that was sent WIDGET_DESTROYED most recently
+should be deconstructed first, as if there is a stack of widgets waiting to be
+destroyed and the act of sending WIDGET_DESTROYED pushes that widget onto the
+stack. (In fact, win32 uses a stack to accomplish this deletion mechanism.)
+
+Thoughts?
+
+
+
+From accounts at eBay.com  Thu Jul 21 05:18:58 2005
+From: accounts at eBay.com (eBay)
+Date: Wed, 20 Jul 2005 20:18:58 -0700 (PDT)
+Subject: [cpaf-dev] TKO Notice: * **Urgent Safeharbor Department Notice ***
+Message-ID: <1121915938.15012.qmail@paypal.com>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050720/be5e5e28/attachment.html>
+
+From confirm at ncua.com  Thu Jul 21 16:36:53 2005
+From: confirm at ncua.com (National Credit Union Security Department)
+Date: Thu, 21 Jul 2005 10:36:53 -0400
+Subject: [cpaf-dev] *** Security Issues ***
+Message-ID: <BSDQVEILWYSLORVCTITTI@comcast.net>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050721/19c5108d/attachment.html>
+
+From service at paypal.com  Thu Jul 21 22:17:43 2005
+From: service at paypal.com (paypal)
+Date: Thu, 21 Jul 2005 13:17:43 -0700
+Subject: [cpaf-dev] Account Limited Uptading System
+Message-ID: <4c0c14d4b066304ee9ba0d0ef06f3178@rs124.securehostserver.com>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050721/0eb2afd5/attachment.html>
+
+From aw-confirm at ebay.com  Thu Jul 21 23:07:05 2005
+From: aw-confirm at ebay.com (aw-confirm at ebay.com)
+Date: Fri, 22 Jul 2005 05:07:05 +0800
+Subject: [cpaf-dev] Your Final Warning From eBay
+Message-ID: <200507212107.j6LL75tJ006272@mail.eclip.com.my>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050722/3276829a/attachment.html>
+
+From leio at dustbite.net  Fri Jul 22 03:40:35 2005
+From: leio at dustbite.net (Mart Raudsepp)
+Date: Fri, 22 Jul 2005 04:40:35 +0300
+Subject: [cpaf-dev] Re: Proposed API for the family of Text Widgets
+In-Reply-To: <loom.20050716T082347-939@post.gmane.org>
+References: <21017b211a27.211a2721017b@optonline.net>
+	 <1121443251.12916.11.camel@localhost>
+	 <loom.20050716T082347-939@post.gmane.org>
+Message-ID: <1121996435.12900.1.camel@localhost>
+
+Here is my version of the API for the base class and entry box:
+
+
+
+Note that all character indexes are 0 based.
+Method names in brackets are proposed alternative names of the method.
+
+------------------------
+
+Class:
+Editable [TextWidget - Editable because a spinbutton could have this interface too,
+          and TextWidget isn't that suitable for it]
+
+Purpose:
+Serves as the common base class for the family of editable widgets in cpaf.
+Features common to all text widgets (selection ranges, inserting and deleting
+text, etc) will go into this base. This class has a protected ctor (pure
+interface on the gui::api side)
+
+Methods:
+void    set_text(str)
+void    set_font(font)
+font    get_font()
+void    select_region(int start_pos = 0, int end_pos = -1) [select_range, set_selection]
+int     get_position() [get_insert_position, get_insertion_position]
+int     get_selection_position()
+bool    get_selection_bounds(int& left_pos, int& right_pos)
+void    set_position(int pos)
+void    set_editable(bool is_editable = true)
+bool    get_editable()
+void    insert_text(string text, int& pos)
+void    delete_text(int start_pos = 0, int end_pos = -1)
+string  get_text(int start_pos = 0, int end_pos = -1)
+void    delete_selection()
+
+Signals:
+EDITABLE_CHANGED       ["changed"]
+EDITABLE_TEXT_DELETED  ["delete-text"]
+EDITABLE_TEXT_INSERTED ["insert-text"]
+
+
+Methods:
+
+void    set_text(str)
+Effect: Sets the text in the widget to the given value, replacing the current contents.
+
+void    set_font(font)
+Effect: Sets the font for the text widget to use. This effects all text contained
+        within the widget.
+Note:   This function might be better in gui::Widget instead of here. [Widget::modify_font]
+
+font    get_font()
+Effect: Returns the font currently used by the widget.
+Note:   This function might be better in gui::Widget instead of here.
+
+void    select_region(int start_pos = 0, int end_pos = -1) [select_range, set_selection]
+Effect: Selects a region of text. The characters that will be made selected are those
+        at positions from start_pos up to, but not including end_pos. If end_pos is
+        negative, then the characters selected will be from start_pos to the end of the
+        text.
+Note:   If start == end, the caret will be moved to that position and the length of the
+        selection is zero.
+Note:   [0; -1) selects the entire text in the widget.
+
+int     get_position() [get_insert_position, get_insertion_position]
+Effect: Returns the current caret position.
+
+int     get_selection_position()
+Effect: Returns the current selection position. This is the other side of a selection
+        compared to get_position(), if one exists. The region between get_position()
+        and get_selection_position() is the current selection - if the values are
+        equal, there is no selection.
+
+bool    get_selection_bounds(int& left_pos, int& right_pos)
+Effect: Gets the current selection bounds, if there is a selection. Thie is a
+        convenience function using get_position and get_selection_position:
+
+        * If there is no selection, left_pos and right_pos will point at the caret
+          position. False is returned.
+
+        * If there is a selection, left_pos and right_pos are the values returnt by
+          get_position and get_selection_position, but it is ensured that the smaller
+          value will be set to left_pos. True is returned.
+
+void    set_position(int pos)
+Effect: Sets the caret position.
+        The position of the caret will be displayed before the character with the given
+        index in the widget. The value must be less than or equal to the number of
+        characters in the widget. A value of -1 indicates that the position of the caret
+        should be after the last character in the widget.
+
+void    set_editable(bool is_editable = true)
+Effect: Sets the editability of the widget.
+
+bool    get_editable()
+Effect: Returns if the user can edit the widget.
+
+void    insert_text(string text, int& pos)
+Effect: Inserts the given text at a given position.
+        After the call pos will point at the position after the newly inserted text
+        (allows chaining text insertion at an arbitrary position).
+
+void    delete_text(int start_pos = 0, int end_pos = -1)
+Effect: Delete a sequence of characters in the range [start_pos, end_pos).
+        If end_pos is negative, then the characters from start_pos to the end of the
+        text buffer will be deleted.
+Note:   [0; -1) deletes the entire text in the widget.
+
+string  get_text(int start_pos = 0, int end_pos = -1) [don't like the name really, how about get_chars?]
+Effect: Returns the text in the range [start_pos, end_pos).
+        If end_pos is negative, then the character from start_pos to the end of the
+        text buffer will be returned.
+Note:   [0; -1) returns the whole textual value.
+
+void    delete_selection()
+Effect: Deletes the currently selected text in the widget and disclaims the selection.
+        (This is equivalent to setting the selected text to be an empty string)
+Postcondition: The selection length is now 0 (selection disclaimed)
+
+
+
+Possible convenience methods:
+
+string  get_selection_text()
+{
+    int left, right;
+    get_selection_bounds(left, right);
+    return get_text(left, right);
+}
+Effect: Returns a string containing the text that is selected
+
+void    set_selection_text(str)
+{
+    int left, right;
+    get_selection_bounds(left, right);
+    delete_text(left, right);
+    insert_text(left, str);
+    select_region(left, str.len());
+}
+Effect: Replaces the selected text with str. The length of str may be
+different than the length of the selection.
+Postcondition: str is now selected within the widget.
+
+void    delete_selection()
+{
+    int left, right;
+    get_selection_bounds(left, right);
+    delete_text(left, right);
+}
+Effect: Deletes the selected text.
+Postcondition: The selection length is now 0.
+
+----------------------------------------------------------------------------------------
+
+
+
+Class:
+EntryBox [Entry]
+
+Inherits From:
+Editable [TextWidget]
+
+Purpose:
+This class represents a simple single line text entry widget. If the entered text is
+longer than the allocated width of the widget, the widget will scroll so that the cursor
+position is visible.
+
+Methods:
+void    set_visibility(bool visible)
+bool    get_visibility()
+void    set_invisible_char(wchar_t ch)
+wchar_t get_invisible_char()
+void    set_max_length(int len)
+int     get_max_length()
+void    set_alignment(float xalign)
+float   get_alignment()
+
+
+Methods:
+
+void    set_visibility(bool visible)
+Effect: Sets whether the contents of the entrybox are visible or not. When visibility
+        is set to false, characters are displayed as the invisible char, and will also
+        appear that way when the text in the entrybox is copied elsewhere.
+Note:   The default invisible character is the asterisk '*', but it can be changed
+        with set_invisible_char().
+
+bool    get_visibility()
+Effect: Returns if characters are shown as plain text.
+
+void    set_invisible_char(wchar_t ch)
+Effect: Sets the character to use in place of the actual text when visibility of the
+        entrybox is false. In other words, this character will be used in "password mode"
+        to show the user how many characters have been typed.
+        The default invisibile character is an asterisk ('*'). If you set the invisible
+        char to \0, then the user will get no feedback at all; there will appear no text
+        on the screen as they type.
+Note:   The type of ch must be able to represent all unicode characters.
+
+wchar_t get_invisible_char()
+Effect: Returns the character used when masking entry contents (in "password mode").
+Note:   This will be '*' if set_invisible_char() has not been called.
+
+void    set_max_length(int len)
+Effect: Sets the maximum numbers of characters for this entry. 0 means no maximum limit.
+        If the current contens are longer than the given length, then the value will
+        be truncated to fit.
+Note:   Allowed values: [0,65535]
+
+void    set_alignment(float xalign)
+Effect: Sets the alignment for the contents of the entrybox. This controls the horizontal
+        positioning of the contents when the displayed text is shorter than the width of
+        the entry.
+Note:   xaling is from 0 (left) to 1 (right). Reversed for RTL layouts.
+
+float   get_alignment()
+Effect: Returns the value set by set_alignment().
+Note:   Default is 0.0 (left aligned)
+
+
+-- 
+With regards,
+Mart Raudsepp
+
+Gtk+ port maintainer of cpaf
+leio at users.berlios.de
+http://developer.berlios.de/projects/cpaf
+
+
+
+From thomas.st at gmail.com  Fri Jul 22 09:50:05 2005
+From: thomas.st at gmail.com (tom)
+Date: Fri, 22 Jul 2005 09:50:05 +0200
+Subject: [cpaf-dev] Re: Proposed API for the family of Text Widgets
+In-Reply-To: <1121996435.12900.1.camel@localhost>
+References: <21017b211a27.211a2721017b@optonline.net>
+	 <1121443251.12916.11.camel@localhost>
+	 <loom.20050716T082347-939@post.gmane.org>
+	 <1121996435.12900.1.camel@localhost>
+Message-ID: <152fd9bc050722005039078ac5@mail.gmail.com>
+
+> Class:
+> Editable
+> [...]
+> Methods:
+> void    set_text(str)
+> void    set_font(font)
+> font    get_font()
+> [...]
+> void    insert_text(string text, int& pos)
+> void    delete_text(int start_pos = 0, int end_pos = -1)
+> string  get_text(int start_pos = 0, int end_pos = -1)
+
+A button could also have these functions, so why not create a Control
+class? Cocoa does that:
+http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/Classes/NSControl.html
+There are even things for editing text in it...
+
+> Class:
+> EntryBox [Entry]
+> [...] 
+> Methods:
+> 
+> void    set_visibility(bool visible)
+> Effect: Sets whether the contents of the entrybox are visible or not. When visibility
+>         is set to false, characters are displayed as the invisible char, and will also
+>         appear that way when the text in the entrybox is copied elsewhere.
+> Note:   The default invisible character is the asterisk '*', but it can be changed
+>         with set_invisible_char().
+> 
+> bool    get_visibility()
+> Effect: Returns if characters are shown as plain text.
+
+No! That isn't a good idea. A password field isn't just an entry with
+an "invisible character". Cocoa warns you when you have the capslock
+key pressed, there have to be things done so you can't copy the text.
+The default invisible character is platform dependent. Some platforms
+use *, others use a point
+(http://www.helpdesk.umd.edu/documents/3/3834/images/password.gif).
+
+> void    set_alignment(float xalign)
+> Effect: Sets the alignment for the contents of the entrybox. This controls the horizontal
+>         positioning of the contents when the displayed text is shorter than the width of
+>         the entry.
+> Note:   xaling is from 0 (left) to 1 (right). Reversed for RTL layouts.
+> 
+> float   get_alignment()
+> Effect: Returns the value set by set_alignment().
+> Note:   Default is 0.0 (left aligned)
+
+In Cocoa there is:
+
+typedef enum _NSTextAlignment {
+   NSLeftTextAlignment = 0,
+   NSRightTextAlignment = 1,
+   NSCenterTextAlignment = 2,
+   NSJustifiedTextAlignment = 3,
+   NSNaturalTextAlignment = 4
+} NSTextAlignment;
+(described on http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/Classes/NSText.html)
+
+So things like 0.25 or 0.75 won't be easy to implement on all
+platforms. That could be also moved into the control-class...
+
+
+From leio at dustbite.net  Fri Jul 22 12:47:22 2005
+From: leio at dustbite.net (Mart Raudsepp)
+Date: Fri, 22 Jul 2005 13:47:22 +0300
+Subject: [cpaf-dev] Re: Proposed API for the family of Text Widgets
+In-Reply-To: <152fd9bc050722005039078ac5@mail.gmail.com>
+References: <21017b211a27.211a2721017b@optonline.net>
+	 <1121443251.12916.11.camel@localhost>
+	 <loom.20050716T082347-939@post.gmane.org>
+	 <1121996435.12900.1.camel@localhost>
+	 <152fd9bc050722005039078ac5@mail.gmail.com>
+Message-ID: <1122029242.12909.11.camel@localhost>
+
+On Fri, 2005-07-22 at 09:50 +0200, tom wrote: 
+> > Class:
+> > Editable
+> > [...]
+> > Methods:
+> > void    set_text(str)
+> > void    set_font(font)
+> > font    get_font()
+> > [...]
+> > void    insert_text(string text, int& pos)
+> > void    delete_text(int start_pos = 0, int end_pos = -1)
+> > string  get_text(int start_pos = 0, int end_pos = -1)
+> 
+> A button could also have these functions, so why not create a Control
+> class? Cocoa does that:
+> http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/Classes/NSControl.html
+> There are even things for editing text in it...
+
+I think it depends on how ever Button class ends up really.
+For example in gtk+ a button is simply a binary container. One could put
+anything inside it, including a boxed or table container into it,
+allowing virtually any amount and kind of widget inside the button.
+Convenience functions exist for buttons with label with an optional
+image on the left.
+I COULD implement the functions in gtk2::gui::Button for working with
+the buttons label, but I'm not too happy with insert_text/delete_text
+there.
+set_font/get_font are GtkWidget properties too in a way, so those
+shouldn't be a problem.
+
+> > Class:
+> > EntryBox [Entry]
+> > [...] 
+> > Methods:
+> > 
+> > void    set_visibility(bool visible)
+> > Effect: Sets whether the contents of the entrybox are visible or not. When visibility
+> >         is set to false, characters are displayed as the invisible char, and will also
+> >         appear that way when the text in the entrybox is copied elsewhere.
+> > Note:   The default invisible character is the asterisk '*', but it can be changed
+> >         with set_invisible_char().
+> > 
+> > bool    get_visibility()
+> > Effect: Returns if characters are shown as plain text.
+> 
+> No! That isn't a good idea. A password field isn't just an entry with
+> an "invisible character". Cocoa warns you when you have the capslock
+> key pressed, there have to be things done so you can't copy the text.
+
+gtk+ also does special things if in "password mode" (set_visibility(false)).
+E.g the text copied from the entry while in "password mode" gets to be copied as ***'s.
+Can you perhaps emulate the runtime changing somehow, if not possible otherwise?
+Perhaps by recreating the control and copying the properties over between TextField and SecureTextField?
+
+> The default invisible character is platform dependent. Some platforms
+> use *, others use a point
+> (http://www.helpdesk.umd.edu/documents/3/3834/images/password.gif).
+
+It should be theme dependant, forget set/get_invisible_char, it is doomed to be deprecated in gtk+ too.
+
+> > void    set_alignment(float xalign)
+> > Effect: Sets the alignment for the contents of the entrybox. This controls the horizontal
+> >         positioning of the contents when the displayed text is shorter than the width of
+> >         the entry.
+> > Note:   xaling is from 0 (left) to 1 (right). Reversed for RTL layouts.
+> > 
+> > float   get_alignment()
+> > Effect: Returns the value set by set_alignment().
+> > Note:   Default is 0.0 (left aligned)
+> 
+> In Cocoa there is:
+> 
+> typedef enum _NSTextAlignment {
+>    NSLeftTextAlignment = 0,
+>    NSRightTextAlignment = 1,
+>    NSCenterTextAlignment = 2,
+>    NSJustifiedTextAlignment = 3,
+>    NSNaturalTextAlignment = 4
+> } NSTextAlignment;
+> (described on http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/Classes/NSText.html)
+> 
+> So things like 0.25 or 0.75 won't be easy to implement on all
+> platforms. That could be also moved into the control-class...
+
+Justify is a bit different here then.
+Otherwise I'm not sure that limiting the API to the least possible alignment across platforms
+would be a good idea.
+Perhaps could on cocoa/win32 port use LeftAlign if the floating argument is less than 0.4 or so,
+RightAlign if greater than 0.6, and CenterAlign if between those two certain values. This can be
+documented then with platform specific notes.
+For justify we could use a negative value or something.
+Ideas welcome.
+
+I'm not sure about this being good for a control-class. We can just go and work with a Editable/TextWidget for now.
+They are all just a pure interface (non-constructable) in the cpaf::gui namespace anyway.
+
+I propose to just have Editable derive from Widget, and later we can move some of the methods to an even more
+common class. Some platforms won't have to change any backend code, some could bring in that common class in
+implementation side too to share some common code. Just some cut and pasting then, and no time waste on
+disputing on things we don't know how we end up with. As I said, this is just a proposal on how to approach ;)
+
+-- 
+With regards,
+Mart Raudsepp
+
+Project manager of wxMUD
+E-mail: leio at dustbite.net
+http://wxmud.sourceforge.net/
+
+
+
+From service at bankofthewest.com  Fri Jul 22 21:23:28 2005
+From: service at bankofthewest.com (Bank Of The West Security Service)
+Date: Fri, 22 Jul 2005 12:23:28 -0700
+Subject: [cpaf-dev] Security Alert - Confirm Your Bank Of The West Information
+Message-ID: <FSDOHELCLXZKBJKITBGHLLT@comcast.net>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050722/6ad916b1/attachment.html>
+
+From snakeb at optonline.net  Fri Jul 22 21:57:25 2005
+From: snakeb at optonline.net (Robin McNeill)
+Date: Fri, 22 Jul 2005 19:57:25 +0000 (UTC)
+Subject: [cpaf-dev] Re: Proposed API for the family of Text Widgets
+References: <21017b211a27.211a2721017b@optonline.net>  <1121443251.12916.11.camel@localhost>  <loom.20050716T082347-939@post.gmane.org>  <1121996435.12900.1.camel@localhost>  <152fd9bc050722005039078ac5@mail.gmail.com> <1122029242.12909.11.camel@localhost>
+Message-ID: <loom.20050722T214506-541@post.gmane.org>
+
+> > In Cocoa there is:
+> > 
+> > typedef enum _NSTextAlignment {
+> >    NSLeftTextAlignment = 0,
+> >    NSRightTextAlignment = 1,
+> >    NSCenterTextAlignment = 2,
+> >    NSJustifiedTextAlignment = 3,
+> >    NSNaturalTextAlignment = 4
+> > } NSTextAlignment;
+> > 
+> > So things like 0.25 or 0.75 won't be easy to implement on all
+> > platforms. That could be also moved into the control-class...
+> 
+> Justify is a bit different here then.
+> Otherwise I'm not sure that limiting the API to the least possible alignment
+across platforms
+> would be a good idea.
+> Perhaps could on cocoa/win32 port use LeftAlign if the floating argument is
+less than 0.4 or so,
+> RightAlign if greater than 0.6, and CenterAlign if between those two certain
+values. This can be
+> documented then with platform specific notes.
+> For justify we could use a negative value or something.
+> Ideas welcome.
+
+I never thought for a second that there was any other way to approach alignment
+except for predefined values as tom listed above. What is the difference between
+0.1 and 0.2 alignment? The text is a "bit more to the right than 0.1"? What use
+is that to real programs?
+
+class TextWidget { // or editable, which ever
+  enum Alignment {
+    LEFT,
+    CENTER,
+    RIGHT,
+    JUSTIFY,
+  };
+
+  void set_alignment(Alignment a);
+  void set_vertical_alignment(Alignment a);
+
+};
+
+Not sure if setting the vertical alignment is possible (for win32 anyway),
+haven't looked into it yet. I also don't know what "Natural" alignment is.
+
+As for the talk of moving many functions into common bases, we could take a
+different approach and use mix-in classes. Something like:
+
+class Editable : public Alignable { };
+class Button : public Alignable { };
+
+class Alignable {
+  enum Alignment { ... };
+  void set_alignment();
+  void ...
+};
+
+Creating too many base classes might be a bad idea if taken too far. There would
+have to be a large degree of similarity between two controls for them to share a
+base class.
+
+
+
+From service at ebay.con  Sat Jul 23 00:14:20 2005
+From: service at ebay.con (eBay)
+Date: Fri, 22 Jul 2005 15:14:20 -0700
+Subject: [cpaf-dev] Update Notification
+Message-ID: <E1Dw5me-0001BV-LO@virginia.networkphantom.net>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050722/4ade274b/attachment.html>
+
+From service at ncua.gov  Sun Jul 24 13:23:27 2005
+From: service at ncua.gov (National Credit Union Administration)
+Date: Sun, 24 Jul 2005 06:23:27 -0500
+Subject: [cpaf-dev] Security Alert - Confirm Your NCUA Information
+Message-ID: <WHZWNOAHCSEVDWKLOWGH@earthlink.net>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050724/50a4376b/attachment.html>
+
+From customerservice at skyfi.com  Sun Jul 24 23:29:15 2005
+From: customerservice at skyfi.com (Sky Financial Group)
+Date: Sun, 24 Jul 2005 17:29:15 -0400
+Subject: [cpaf-dev] Your account will be Suspend
+Message-ID: <E1Dwo27-0003T1-JL@web.sitehostingserver.net>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050724/fd35e191/attachment.html>
+
+From accounts at wellsfargo.com  Mon Jul 25 14:40:03 2005
+From: accounts at wellsfargo.com (Wells Fargo)
+Date: Mon, 25 Jul 2005 05:40:03 -0700
+Subject: [cpaf-dev] Your Account Will Be Suspended
+Message-ID: <E1Dx2FX-0004LE-RL@host156.ipowerweb.com>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050725/056184f4/attachment.html>
+
+From security at bankofamerica.com  Wed Jul 27 18:09:10 2005
+From: security at bankofamerica.com (Bank Of America)
+Date: Wed, 27 Jul 2005 16:09:10 -0000
+Subject: [cpaf-dev] Online Banking Alert (Update Information) *Urgent*
+Message-ID: <20050727160910.916.qmail@home.pl>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050727/0dfb2b8f/attachment.html>
+
+From paypal at email.paypal.com  Sat Jul 30 22:16:00 2005
+From: paypal at email.paypal.com (PayPal)
+Date: Sat, 30 Jul 2005 22:16:00 +0200 (CEST)
+Subject: [cpaf-dev] Account Review Team
+Message-ID: <20050730201600.11B5468AF@gallina.maxes.nl>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050730/3f0c2ae7/attachment.html>
+
+From paypal at email.paypal.com  Sun Jul 31 12:11:15 2005
+From: paypal at email.paypal.com (PayPal)
+Date: 31 Jul 2005 12:11:15 +0200
+Subject: [cpaf-dev] Account Review Team
+Message-ID: <20050731101115.8397.qmail@web02sbp.jronline.nl>
+
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/cpaf-dev/attachments/20050731/369b6f7b/attachment.html>
+

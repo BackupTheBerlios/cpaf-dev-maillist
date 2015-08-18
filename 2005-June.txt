@@ -1,0 +1,97 @@
+From leio at berlios.de  Sat Jun 11 23:53:55 2005
+From: leio at berlios.de (Mart Raudsepp)
+Date: Sun, 12 Jun 2005 00:53:55 +0300
+Subject: [cpaf-dev] First post!
+Message-ID: <1118526835.12911.11.camel@localhost>
+
+Hello.
+
+This is the first post to this list!
+And I'm doing it!
+I suppose all works fine if this e-mail gets to everyone :)
+
+-- 
+With regards,
+Mart Raudsepp
+
+Gtk+ port maintainer of cpaf
+leio at users.berlios.de
+http://developer.berlios.de/projects/cpaf
+
+
+
+From snakeb at optonline.net  Sat Jun 18 10:36:18 2005
+From: snakeb at optonline.net (snakeb at optonline.net)
+Date: Sat, 18 Jun 2005 05:36:18 -0300
+Subject: [cpaf-dev] gui::Foo creation
+Message-ID: <773f5c5773f177.773f177773f5c5@optonline.net>
+
+I apologize for this being so long, but I cover two important topics in this message.
+
+I have been thinking about what to do with the current factory set up to make the internal code more clean, prevent duplication of the gui::Foo::Factory::create function (as can be seen in gui/button.cpp and gui/window.cpp), and make deriving and creating your own widget types easier.
+
+Firstly, I have been thinking of using the "named constructor idiom" (http://www.parashift.com/c++-faq-lite/ctors.html#faq-10.8) and move gui::Foo::Factory::create to gui::Foo::create. This would remove all responsabilities from the factory objects other than providing a convenient way to specify arguments during widget construction, and give the responsability of creating the native widget and initializing the wrapper back to the gui::Foo objects.
+
+Using the named constructor idiom makes it slightly more inconvenient to derive from our objects. Currently, all you need to do is derive from gui::Foo, and then call gui::Foo::Factory::create<MyFoo>() instead of the normal create() method. With the named constructor idiom however, there may or may not be a templated gui::Foo::create method. If there is, then nothing changes. If not, MyFoo is required to declare a public static create method which would need to be properly implemented. The implementation would be something similar to:
+
+    static MyFoo *create(const FactoryParams &data)
+    {
+        return create<MyFoo>(data);
+    }
+
+Where the create() method called by this function is declared in gui::Widget base and is templated.
+
+The reason I would like to use this method is to allow derived widgets to do something differently during creation based on the factory parameters passed to the create method. However, we don't need to do this at all, and could infact simply have the gui::Widget::create template which does all of the work anyway. This doesnt event need to be declared within gui::Widget either, it could go back into the  factories, or could be a standalone function. cpaf::gui::factory::create_widget<class T>(). Come to think of it, any of these methods can work.
+Window::create method
+
+    using cpaf::gui::Window;
+    Window *wnd = Window::create(
+        Window::Data()
+        .client_size(cpaf::Size(400,400))
+        .title("A Window")
+    );
+
+cpaf::gui::create_widget<> template method
+
+    using namespace cpaf::gui;
+    Window *wnd = create_widget<Window>(
+        Window::Data()
+        .client_size(cpaf::Size(400,400))
+        .title("A Window")
+    );
+
+Personally, I think the create_widget method looks "nicer" being a template and all. You may think that because its a template, if it ever changes we are screwed, because templates show up in client code and not the library. That is not true. We can provide template specilizations for every constructable type, which are implemented in the library, and would be invoked by client code. These specializations can change and client code will find them just fine.
+
+    template<cpaf::gui::Widget T> T*create_widget();
+    template<> cpaf::gui::Window *create_widget<cpaf::gui::Window>()
+    {
+       // code
+    }
+    template<> cpaf::gui::Button *create_widget<cpaf::gui::Button>()
+    {
+       // code
+    }
+
+I have tested this method and it does work fine having exported template specializations implemented within the library used by client code. Because of this, It gets my vote. Its not exactly the named constructor idiom when done this way, but it is a similar idea.
+
+
+
+
+
+The second thing I would like to use is "placement new" (http://www.parashift.com/c++-faq-lite/dtors.html#faq-11.10). If you have read the file "cpaf/technotes/widget creation.txt" you would know the reasons for doing what we do right now. One of those reasons is the fact that we cannot simply use "new Impl" because it is impossible to initialize the m_impl member of the gui::Foo wrappers before operator new returns. This is solveable if we use placement new:
+
+    void *raw = operator new(sizeof(cpaf::win32::gui::Button));
+    cpaf::win32::gui::Button *win32_btn = new(raw) cpaf::win32::gui::Button;
+
+The above code is how operator new could be used to allocate a win32 button object at a specific location in memory. The point to using placement new is that this memory location could be made known to the gui::Foo wrapper before the win32 button is actually constructed, which would enable us to move implementation widget creation code back into their constructors. It would also allow us to pass the m_impl pointer to the gui::Foo object in its constructor.
+
+I have tested the above placement new code in the library and used it to allocate all of the win32 impl widgets, and everything continued to function properly, including deletes which properly invoke destructors. The VC debugger was able to properly inspect the objects created and the vtables were all intact, so I assume that the objects were created properly byte aligned. (This is one of the dangers listed on the c++ faq lite about placement new.) I have no way of proving this however, and wouldn't know what happens when things arent properly byte aligned. As long as we are careful and use dynamic_cast where appropriate I do not forsee any problems using placement new. Being honest, I dont know exactly what byte alignment is, but I believe that byte alignment places restrictions on the addresses of objects in memory. As in, a short cannot be allocated at an odd memory address.
+
+The potential problems with placement new that I can see right now are possible byte alignment issues. Becuase we use heavy multiple inheritance, a simple "pointer to our impl" object is not really so simply. dynamic_cast must be used every time we need to cast a pointer to our impl objects to make sure that the proper address is returned.
+
+I would also suspect that using operator delete on the pointer returned by placement new casted to anything other than the Impl object that was originally created may cause issues. That means, creating a win32::Button, casting it to an api::Button, and using delete on the api::Button. I have not tested that at all so that may prove completely false.
+
+What do you guys think about using placement new and switching from using empty ctors and a create method to using ctor arguments again?
+
+
+

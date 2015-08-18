@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [cpaf-dev] Re: Proposed API for the family of Text Widgets
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/cpaf-dev/2005-July/index.html" >
+   <LINK REL="made" HREF="mailto:cpaf-dev%40lists.berlios.de?Subject=Re%3A%20%5Bcpaf-dev%5D%20Re%3A%20Proposed%20API%20for%20the%20family%20of%20Text%20Widgets&In-Reply-To=%3C152fd9bc050722005039078ac5%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000025.html">
+   <LINK REL="Next"  HREF="000027.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[cpaf-dev] Re: Proposed API for the family of Text Widgets</H1>
+    <B>tom</B> 
+    <A HREF="mailto:cpaf-dev%40lists.berlios.de?Subject=Re%3A%20%5Bcpaf-dev%5D%20Re%3A%20Proposed%20API%20for%20the%20family%20of%20Text%20Widgets&In-Reply-To=%3C152fd9bc050722005039078ac5%40mail.gmail.com%3E"
+       TITLE="[cpaf-dev] Re: Proposed API for the family of Text Widgets">thomas.st at gmail.com
+       </A><BR>
+    <I>Fri Jul 22 09:50:05 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000025.html">[cpaf-dev] Re: Proposed API for the family of Text Widgets
+</A></li>
+        <LI>Next message: <A HREF="000027.html">[cpaf-dev] Re: Proposed API for the family of Text Widgets
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#26">[ date ]</a>
+              <a href="thread.html#26">[ thread ]</a>
+              <a href="subject.html#26">[ subject ]</a>
+              <a href="author.html#26">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>&gt;<i> Class:
+</I>&gt;<i> Editable
+</I>&gt;<i> [...]
+</I>&gt;<i> Methods:
+</I>&gt;<i> void    set_text(str)
+</I>&gt;<i> void    set_font(font)
+</I>&gt;<i> font    get_font()
+</I>&gt;<i> [...]
+</I>&gt;<i> void    insert_text(string text, int&amp; pos)
+</I>&gt;<i> void    delete_text(int start_pos = 0, int end_pos = -1)
+</I>&gt;<i> string  get_text(int start_pos = 0, int end_pos = -1)
+</I>
+A button could also have these functions, so why not create a Control
+class? Cocoa does that:
+<A HREF="http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/Classes/NSControl.html">http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/Classes/NSControl.html</A>
+There are even things for editing text in it...
+
+&gt;<i> Class:
+</I>&gt;<i> EntryBox [Entry]
+</I>&gt;<i> [...] 
+</I>&gt;<i> Methods:
+</I>&gt;<i> 
+</I>&gt;<i> void    set_visibility(bool visible)
+</I>&gt;<i> Effect: Sets whether the contents of the entrybox are visible or not. When visibility
+</I>&gt;<i>         is set to false, characters are displayed as the invisible char, and will also
+</I>&gt;<i>         appear that way when the text in the entrybox is copied elsewhere.
+</I>&gt;<i> Note:   The default invisible character is the asterisk '*', but it can be changed
+</I>&gt;<i>         with set_invisible_char().
+</I>&gt;<i> 
+</I>&gt;<i> bool    get_visibility()
+</I>&gt;<i> Effect: Returns if characters are shown as plain text.
+</I>
+No! That isn't a good idea. A password field isn't just an entry with
+an &quot;invisible character&quot;. Cocoa warns you when you have the capslock
+key pressed, there have to be things done so you can't copy the text.
+The default invisible character is platform dependent. Some platforms
+use *, others use a point
+(<A HREF="http://www.helpdesk.umd.edu/documents/3/3834/images/password.gif">http://www.helpdesk.umd.edu/documents/3/3834/images/password.gif</A>).
+
+&gt;<i> void    set_alignment(float xalign)
+</I>&gt;<i> Effect: Sets the alignment for the contents of the entrybox. This controls the horizontal
+</I>&gt;<i>         positioning of the contents when the displayed text is shorter than the width of
+</I>&gt;<i>         the entry.
+</I>&gt;<i> Note:   xaling is from 0 (left) to 1 (right). Reversed for RTL layouts.
+</I>&gt;<i> 
+</I>&gt;<i> float   get_alignment()
+</I>&gt;<i> Effect: Returns the value set by set_alignment().
+</I>&gt;<i> Note:   Default is 0.0 (left aligned)
+</I>
+In Cocoa there is:
+
+typedef enum _NSTextAlignment {
+   NSLeftTextAlignment = 0,
+   NSRightTextAlignment = 1,
+   NSCenterTextAlignment = 2,
+   NSJustifiedTextAlignment = 3,
+   NSNaturalTextAlignment = 4
+} NSTextAlignment;
+(described on <A HREF="http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/Classes/NSText.html">http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/Classes/NSText.html</A>)
+
+So things like 0.25 or 0.75 won't be easy to implement on all
+platforms. That could be also moved into the control-class...
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000025.html">[cpaf-dev] Re: Proposed API for the family of Text Widgets
+</A></li>
+	<LI>Next message: <A HREF="000027.html">[cpaf-dev] Re: Proposed API for the family of Text Widgets
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#26">[ date ]</a>
+              <a href="thread.html#26">[ thread ]</a>
+              <a href="subject.html#26">[ subject ]</a>
+              <a href="author.html#26">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/cpaf-dev">More information about the cpaf-dev
+mailing list</a><br>
+</body></html>

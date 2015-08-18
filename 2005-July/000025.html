@@ -1,0 +1,289 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [cpaf-dev] Re: Proposed API for the family of Text Widgets
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/cpaf-dev/2005-July/index.html" >
+   <LINK REL="made" HREF="mailto:cpaf-dev%40lists.berlios.de?Subject=Re%3A%20%5Bcpaf-dev%5D%20Re%3A%20Proposed%20API%20for%20the%20family%20of%20Text%20Widgets&In-Reply-To=%3C1121996435.12900.1.camel%40localhost%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000005.html">
+   <LINK REL="Next"  HREF="000026.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[cpaf-dev] Re: Proposed API for the family of Text Widgets</H1>
+    <B>Mart Raudsepp</B> 
+    <A HREF="mailto:cpaf-dev%40lists.berlios.de?Subject=Re%3A%20%5Bcpaf-dev%5D%20Re%3A%20Proposed%20API%20for%20the%20family%20of%20Text%20Widgets&In-Reply-To=%3C1121996435.12900.1.camel%40localhost%3E"
+       TITLE="[cpaf-dev] Re: Proposed API for the family of Text Widgets">leio at dustbite.net
+       </A><BR>
+    <I>Fri Jul 22 03:40:35 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000005.html">[cpaf-dev] Re: Proposed API for the family of Text  Widgets
+</A></li>
+        <LI>Next message: <A HREF="000026.html">[cpaf-dev] Re: Proposed API for the family of Text Widgets
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#25">[ date ]</a>
+              <a href="thread.html#25">[ thread ]</a>
+              <a href="subject.html#25">[ subject ]</a>
+              <a href="author.html#25">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Here is my version of the API for the base class and entry box:
+
+
+
+Note that all character indexes are 0 based.
+Method names in brackets are proposed alternative names of the method.
+
+------------------------
+
+Class:
+Editable [TextWidget - Editable because a spinbutton could have this interface too,
+          and TextWidget isn't that suitable for it]
+
+Purpose:
+Serves as the common base class for the family of editable widgets in cpaf.
+Features common to all text widgets (selection ranges, inserting and deleting
+text, etc) will go into this base. This class has a protected ctor (pure
+interface on the gui::api side)
+
+Methods:
+void    set_text(str)
+void    set_font(font)
+font    get_font()
+void    select_region(int start_pos = 0, int end_pos = -1) [select_range, set_selection]
+int     get_position() [get_insert_position, get_insertion_position]
+int     get_selection_position()
+bool    get_selection_bounds(int&amp; left_pos, int&amp; right_pos)
+void    set_position(int pos)
+void    set_editable(bool is_editable = true)
+bool    get_editable()
+void    insert_text(string text, int&amp; pos)
+void    delete_text(int start_pos = 0, int end_pos = -1)
+string  get_text(int start_pos = 0, int end_pos = -1)
+void    delete_selection()
+
+Signals:
+EDITABLE_CHANGED       [&quot;changed&quot;]
+EDITABLE_TEXT_DELETED  [&quot;delete-text&quot;]
+EDITABLE_TEXT_INSERTED [&quot;insert-text&quot;]
+
+
+Methods:
+
+void    set_text(str)
+Effect: Sets the text in the widget to the given value, replacing the current contents.
+
+void    set_font(font)
+Effect: Sets the font for the text widget to use. This effects all text contained
+        within the widget.
+Note:   This function might be better in gui::Widget instead of here. [Widget::modify_font]
+
+font    get_font()
+Effect: Returns the font currently used by the widget.
+Note:   This function might be better in gui::Widget instead of here.
+
+void    select_region(int start_pos = 0, int end_pos = -1) [select_range, set_selection]
+Effect: Selects a region of text. The characters that will be made selected are those
+        at positions from start_pos up to, but not including end_pos. If end_pos is
+        negative, then the characters selected will be from start_pos to the end of the
+        text.
+Note:   If start == end, the caret will be moved to that position and the length of the
+        selection is zero.
+Note:   [0; -1) selects the entire text in the widget.
+
+int     get_position() [get_insert_position, get_insertion_position]
+Effect: Returns the current caret position.
+
+int     get_selection_position()
+Effect: Returns the current selection position. This is the other side of a selection
+        compared to get_position(), if one exists. The region between get_position()
+        and get_selection_position() is the current selection - if the values are
+        equal, there is no selection.
+
+bool    get_selection_bounds(int&amp; left_pos, int&amp; right_pos)
+Effect: Gets the current selection bounds, if there is a selection. Thie is a
+        convenience function using get_position and get_selection_position:
+
+        * If there is no selection, left_pos and right_pos will point at the caret
+          position. False is returned.
+
+        * If there is a selection, left_pos and right_pos are the values returnt by
+          get_position and get_selection_position, but it is ensured that the smaller
+          value will be set to left_pos. True is returned.
+
+void    set_position(int pos)
+Effect: Sets the caret position.
+        The position of the caret will be displayed before the character with the given
+        index in the widget. The value must be less than or equal to the number of
+        characters in the widget. A value of -1 indicates that the position of the caret
+        should be after the last character in the widget.
+
+void    set_editable(bool is_editable = true)
+Effect: Sets the editability of the widget.
+
+bool    get_editable()
+Effect: Returns if the user can edit the widget.
+
+void    insert_text(string text, int&amp; pos)
+Effect: Inserts the given text at a given position.
+        After the call pos will point at the position after the newly inserted text
+        (allows chaining text insertion at an arbitrary position).
+
+void    delete_text(int start_pos = 0, int end_pos = -1)
+Effect: Delete a sequence of characters in the range [start_pos, end_pos).
+        If end_pos is negative, then the characters from start_pos to the end of the
+        text buffer will be deleted.
+Note:   [0; -1) deletes the entire text in the widget.
+
+string  get_text(int start_pos = 0, int end_pos = -1) [don't like the name really, how about get_chars?]
+Effect: Returns the text in the range [start_pos, end_pos).
+        If end_pos is negative, then the character from start_pos to the end of the
+        text buffer will be returned.
+Note:   [0; -1) returns the whole textual value.
+
+void    delete_selection()
+Effect: Deletes the currently selected text in the widget and disclaims the selection.
+        (This is equivalent to setting the selected text to be an empty string)
+Postcondition: The selection length is now 0 (selection disclaimed)
+
+
+
+Possible convenience methods:
+
+string  get_selection_text()
+{
+    int left, right;
+    get_selection_bounds(left, right);
+    return get_text(left, right);
+}
+Effect: Returns a string containing the text that is selected
+
+void    set_selection_text(str)
+{
+    int left, right;
+    get_selection_bounds(left, right);
+    delete_text(left, right);
+    insert_text(left, str);
+    select_region(left, str.len());
+}
+Effect: Replaces the selected text with str. The length of str may be
+different than the length of the selection.
+Postcondition: str is now selected within the widget.
+
+void    delete_selection()
+{
+    int left, right;
+    get_selection_bounds(left, right);
+    delete_text(left, right);
+}
+Effect: Deletes the selected text.
+Postcondition: The selection length is now 0.
+
+----------------------------------------------------------------------------------------
+
+
+
+Class:
+EntryBox [Entry]
+
+Inherits From:
+Editable [TextWidget]
+
+Purpose:
+This class represents a simple single line text entry widget. If the entered text is
+longer than the allocated width of the widget, the widget will scroll so that the cursor
+position is visible.
+
+Methods:
+void    set_visibility(bool visible)
+bool    get_visibility()
+void    set_invisible_char(wchar_t ch)
+wchar_t get_invisible_char()
+void    set_max_length(int len)
+int     get_max_length()
+void    set_alignment(float xalign)
+float   get_alignment()
+
+
+Methods:
+
+void    set_visibility(bool visible)
+Effect: Sets whether the contents of the entrybox are visible or not. When visibility
+        is set to false, characters are displayed as the invisible char, and will also
+        appear that way when the text in the entrybox is copied elsewhere.
+Note:   The default invisible character is the asterisk '*', but it can be changed
+        with set_invisible_char().
+
+bool    get_visibility()
+Effect: Returns if characters are shown as plain text.
+
+void    set_invisible_char(wchar_t ch)
+Effect: Sets the character to use in place of the actual text when visibility of the
+        entrybox is false. In other words, this character will be used in &quot;password mode&quot;
+        to show the user how many characters have been typed.
+        The default invisibile character is an asterisk ('*'). If you set the invisible
+        char to \0, then the user will get no feedback at all; there will appear no text
+        on the screen as they type.
+Note:   The type of ch must be able to represent all unicode characters.
+
+wchar_t get_invisible_char()
+Effect: Returns the character used when masking entry contents (in &quot;password mode&quot;).
+Note:   This will be '*' if set_invisible_char() has not been called.
+
+void    set_max_length(int len)
+Effect: Sets the maximum numbers of characters for this entry. 0 means no maximum limit.
+        If the current contens are longer than the given length, then the value will
+        be truncated to fit.
+Note:   Allowed values: [0,65535]
+
+void    set_alignment(float xalign)
+Effect: Sets the alignment for the contents of the entrybox. This controls the horizontal
+        positioning of the contents when the displayed text is shorter than the width of
+        the entry.
+Note:   xaling is from 0 (left) to 1 (right). Reversed for RTL layouts.
+
+float   get_alignment()
+Effect: Returns the value set by set_alignment().
+Note:   Default is 0.0 (left aligned)
+
+
+-- 
+With regards,
+Mart Raudsepp
+
+Gtk+ port maintainer of cpaf
+<A HREF="https://lists.berlios.de/mailman/listinfo/cpaf-dev">leio at users.berlios.de</A>
+<A HREF="http://developer.berlios.de/projects/cpaf">http://developer.berlios.de/projects/cpaf</A>
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000005.html">[cpaf-dev] Re: Proposed API for the family of Text  Widgets
+</A></li>
+	<LI>Next message: <A HREF="000026.html">[cpaf-dev] Re: Proposed API for the family of Text Widgets
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#25">[ date ]</a>
+              <a href="thread.html#25">[ thread ]</a>
+              <a href="subject.html#25">[ subject ]</a>
+              <a href="author.html#25">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/cpaf-dev">More information about the cpaf-dev
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [cpaf-dev] Re: Proposed API for the family of Text  Widgets
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/cpaf-dev/2005-July/index.html" >
+   <LINK REL="made" HREF="mailto:cpaf-dev%40lists.berlios.de?Subject=Re%3A%20%5Bcpaf-dev%5D%20Re%3A%20Proposed%20API%20for%20the%20family%20of%20Text%20%20Widgets&In-Reply-To=%3Cloom.20050716T082347-939%40post.gmane.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000003.html">
+   <LINK REL="Next"  HREF="000005.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[cpaf-dev] Re: Proposed API for the family of Text  Widgets</H1>
+    <B>Robin McNeill</B> 
+    <A HREF="mailto:cpaf-dev%40lists.berlios.de?Subject=Re%3A%20%5Bcpaf-dev%5D%20Re%3A%20Proposed%20API%20for%20the%20family%20of%20Text%20%20Widgets&In-Reply-To=%3Cloom.20050716T082347-939%40post.gmane.org%3E"
+       TITLE="[cpaf-dev] Re: Proposed API for the family of Text  Widgets">snakeb at optonline.net
+       </A><BR>
+    <I>Sat Jul 16 09:17:41 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000003.html">[cpaf-dev] Proposed API for the family of Text  Widgets
+</A></li>
+        <LI>Next message: <A HREF="000005.html">[cpaf-dev] Re: Proposed API for the family of Text  Widgets
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#4">[ date ]</a>
+              <a href="thread.html#4">[ thread ]</a>
+              <a href="subject.html#4">[ subject ]</a>
+              <a href="author.html#4">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Mart Raudsepp &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/cpaf-dev">leio at ...</A>&gt; writes:
+
+&gt;<i> 
+</I>&gt;<i> On Fri, 2005-07-08 at 22:15 -0300, <A HREF="https://lists.berlios.de/mailman/listinfo/cpaf-dev">snakeb at ...</A> wrote:
+</I>&gt;<i> &gt; void    set_font(font)
+</I>&gt;<i> &gt; Effect: Sets the font for the text widget to use. This effects all text
+</I>&gt;<i> &gt; contained within the widget
+</I>&gt;<i> &gt; Note:   This function might be better in gui::Widget instead of here
+</I>&gt;<i> 
+</I>&gt;<i> Suggestion for Effect:
+</I>&gt;<i> Sets the default font for the text widget to use. This effects all text
+</I>&gt;<i> contained within the widget, except _parts_ of the text that have a
+</I>&gt;<i> different font explicitly set (a la GtkTextTag's in gtk+).
+</I>&gt;<i> Good for Richtext and TextBox later on (TextBox should give some basic
+</I>&gt;<i> styling possibilities)
+</I>&gt;<i> 
+</I>&gt;<i> &gt; font    get_font()
+</I>&gt;<i> &gt; Effect: Returns the font currently used by the widget
+</I>&gt;<i> &gt; Note:   This function might be better in gui::Widget instead of here
+</I>&gt;<i> 
+</I>&gt;<i> Default font, as above described for get_font?
+</I>
+Sure, setting the &quot;Default font&quot; is fine. It hsould probably still be moved into
+gui::Widget.
+
+&gt;<i> &gt; void    insert_text(str, position)
+</I>&gt;<i> &gt; Effect:	Inserts str at the given position within the widget
+</I>&gt;<i> 
+</I>&gt;<i> &gt; void    delete_text(int start, int end)
+</I>&gt;<i> &gt; Effect:	Removes the text between positions start and end
+</I>&gt;<i> 
+</I>&gt;<i> For a really powerful widget, iterators would be fun - but I guess
+</I>&gt;<i> cross-platform puts its limits here. And this can be a function of
+</I>&gt;<i> Richtext then.
+</I>
+Iterators would be great but I didn't include them into this iteration of the
+api. We'd need to think about how the iterators would actually work for
+extraction of elements efficiently. Insertion is easy; text would just be
+inserted at the &quot;insertion point&quot; using the insert_str function. Maybe it would
+use a different overload of it, one without the position parameter which inserts
+text at the current caret position. After an insertion the caret would move to
+the end of the inserted text so that inserting more than once works as expected.
+We also need to consider how streams will work with what ever string solution we
+end up using.
+
+&gt;<i> &gt; int     get_selection_start()
+</I>&gt;<i> &gt; Effect:	Returns the index of the beginning of the selection
+</I>&gt;<i> &gt; 
+</I>&gt;<i> &gt; int     get_selection_end()
+</I>&gt;<i> &gt; Effect:	Returns the index of the end of the selection. If one character is
+</I>&gt;<i> &gt; selected and the index of the start of the selection is 1, this function
+</I>&gt;<i> &gt; returns 2. If no characters are selection and the start index is 1, this
+</I>&gt;<i> &gt; function returns 1.
+</I>&gt;<i> 
+</I>&gt;<i> start and end aren't perfect terms here - &quot;start&quot; could come AFTER
+</I>&gt;<i> &quot;end&quot;, the position where the cursor blinks is at &quot;end&quot; - this means a
+</I>&gt;<i> visual cursor appearance difference (if present), and where the cursor
+</I>&gt;<i> moves with arrow keys (either from the right or left end of the
+</I>&gt;<i> selection).
+</I>
+Your right. How about we add
+
+int	get_insertion_position();
+Effect:	Returns the character index of the caret within the control.
+
+int     get_selection_start()
+Effect:	Returns the index of the beginning of the selection, which is defined as
+the left most selected character.
+
+int     get_selection_end()
+Effect:	Returns the index of the end of the selection, which is defined as the
+right most selected character.
+
+I haven't put too much thought into those so they may not be useful functions.
+
+&gt;<i> &gt; string  get_selection_text()
+</I>&gt;<i> &gt; Effect: Returns a string containing the text that is selected
+</I>&gt;<i> 
+</I>&gt;<i> I would see that as a convenience function - get_text_from_range alike
+</I>&gt;<i> thing with get_selection returnt values would be more low-level than
+</I>&gt;<i> that, hence the claim that this is a convenience func.
+</I>
+That reminds me, I forgot about this:
+
+string  get_text_range(int begin, int end)
+Effect: Returns the text in the range [begin, end)
+
+&gt;<i> &gt; void    set_selection_text(str)
+</I>&gt;<i> &gt; Effect:	Replaces the selected text with str. The length of str may be
+</I>&gt;<i> &gt; different than the length of the selection.
+</I>&gt;<i> &gt; Postcondition: str is now selected within the widget.
+</I>&gt;<i> 
+</I>&gt;<i> Don't really like the Postcondition - it's rarely what one wants imho.
+</I>&gt;<i> This could be solved through some kind of emulation aswell, as below
+</I>&gt;<i> with delete_selection:
+</I>
+Your probably right, lets drop that post condition then. If the user code wants
+it, they can re-select the string they replaced the old selection with. If we
+keep the post condition and the programmer doesn't want the string selected it
+creates flickering as the text is selected and then immediately deselected.
+
+&gt;<i> &gt; void    delete_selection()
+</I>&gt;<i> &gt; Effect: Deletes the selected text. This is equivilant to setting the selected
+</I>&gt;<i> &gt; text to be an empty string.
+</I>&gt;<i> &gt; Postcondition: The selection length is now 0.
+</I>&gt;<i> 
+</I>&gt;<i> Having an effect of &quot;backspace emulation&quot; would be another possibility
+</I>&gt;<i> for this functionality - together with a different method name.
+</I>
+Different method name like what? To go along with &quot;get_text_range()&quot; we should
+also have:
+
+void delete_text_range(int begin, int end)
+Effect: Removes the text range [begin, end) from the TextWidget.
+
+Can't believe I didn't include this but we also need:
+
+void replace_text_range(int begin, int end, string str)
+Effect: Replaces the range of text [begin, end) with str.
+
+What should happen to the caret after replace_text_range has been called?
+
+&gt;<i> &gt; Class:
+</I>&gt;<i> &gt; EntryBox
+</I>&gt;<i> &gt; 
+</I>&gt;<i> &gt; Inherits From:
+</I>&gt;<i> &gt; TextWidget
+</I>&gt;<i> &gt; 
+</I>&gt;<i> &gt; Purpose:
+</I>&gt;<i> &gt; This class represents a simple text entry field. It can only contain one line
+</I>&gt;<i> &gt; of text (is not multilined). It does not implement any new methods.
+</I>&gt;<i> 
+</I>&gt;<i> Later it should have convenience functions for entry boxes - e.g to
+</I>&gt;<i> switch to a password box.
+</I>
+Woops, that should definately be included.
+
+void set_password_character(character c)
+Effect: Sets the password character to use for this EntryBox, and also makes
+this EntryBox function as a password input box.
+
+Should we include explicit &quot;password box&quot; enable and disable functions instead
+of making set_password_character make the EntryBox a password box forever?
+
+&gt;<i> &gt; Class:
+</I>&gt;<i> &gt; TextBox
+</I>&gt;<i> &gt; 
+</I>&gt;<i> &gt; Inherits From:
+</I>&gt;<i> &gt; TextWidget
+</I>&gt;<i> &gt; 
+</I>&gt;<i> &gt; Purpose:
+</I>&gt;<i> &gt; This class represents a mutliline EditBox. It does not provide anything more
+</I>&gt;<i> &gt; than this.
+</I>&gt;<i> 
+</I>&gt;<i> I would like to see some more functionality here later on - basic
+</I>&gt;<i> styling, and such.
+</I>
+No styling. If we add styling support here, where do we draw the line between
+this control and RichTextBox? That would be a very difficult choice. If you want
+styling, you use RichTextBox. That keeps the api clean. Look at what happened to
+wxTextCtrl because some styling support is included, along with physical
+RichTextBox support (on certain platforms) which uses the same exact api.
+
+If anybody notices a particular function that they think would be impossible to
+implement cleanly on a given port mention it so we don't design something that
+won't work.
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000003.html">[cpaf-dev] Proposed API for the family of Text  Widgets
+</A></li>
+	<LI>Next message: <A HREF="000005.html">[cpaf-dev] Re: Proposed API for the family of Text  Widgets
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#4">[ date ]</a>
+              <a href="thread.html#4">[ thread ]</a>
+              <a href="subject.html#4">[ subject ]</a>
+              <a href="author.html#4">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/cpaf-dev">More information about the cpaf-dev
+mailing list</a><br>
+</body></html>
